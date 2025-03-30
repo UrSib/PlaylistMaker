@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="long_padding">24dp</dimen>
-    <dimen name="long_medium_padding">21dp</dimen>
-    <dimen name="long_medium_medium_padding">18dp</dimen>
+    <dimen name="long_medium_padding">20dp</dimen>
     <dimen name="medium_padding">16dp</dimen>
     <dimen name="medium_short_padding">12dp</dimen>
     <dimen name="short_padding">8dp</dimen>

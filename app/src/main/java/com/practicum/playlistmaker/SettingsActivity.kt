@@ -7,15 +7,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.appbar.MaterialToolbar
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val back = findViewById<LinearLayout>(R.id.back)
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
 
-        back.setOnClickListener {
+        toolbar.setNavigationOnClickListener {
 
             finish()
 
