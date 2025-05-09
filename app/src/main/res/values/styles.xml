@@ -31,4 +31,11 @@
         <item name="android:drawableTint">?attr/colorPrimaryVariant</item>
     </style>
 
+    <style name="SearchEditTextStyle">
+        <item name="android:textColor">@color/icon_black</item>
+        <item name="android:textColorHint">?attr/colorPrimaryVariant</item>
+        <item name="android:drawableTint">?attr/colorPrimaryVariant</item>
+        <item name="android:tint">?attr/colorPrimaryVariant</item>
+    </style>
+
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -15,13 +16,22 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 
 class SearchActivity : AppCompatActivity() {
+
+    var searchText = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        if (savedInstanceState != null) {
+            searchText = savedInstanceState.getString("SEARCH_TEXT", searchText)
+        }
+
         val toolbarSearch = findViewById<MaterialToolbar>(R.id.toolbar_search)
         val search = findViewById<EditText>(R.id.edit_text_search)
         val clear = findViewById<ImageView>(R.id.clear)
+
+        search.setText(searchText)
 
         toolbarSearch.setNavigationOnClickListener {
 
@@ -41,6 +51,7 @@ class SearchActivity : AppCompatActivity() {
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
                 // TODO:
             }
 
@@ -50,7 +61,8 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-              // TODO:
+
+                searchText = s.toString()
             }
         }
 
@@ -65,4 +77,10 @@ class SearchActivity : AppCompatActivity() {
             View.VISIBLE
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("SEARCH_TEXT", searchText)
+    }
+
 }

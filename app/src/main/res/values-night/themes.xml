@@ -9,4 +9,12 @@
         <item name="colorSecondaryVariant">@color/white</item>
         <item name="colorOnSecondary">@color/white</item>
     </style>
+
+    <style name="SearchEditTextStyle">
+        <item name="android:textColor">@color/icon_black</item>
+        <item name="android:textColorHint">@color/icon_black</item>
+        <item name="android:drawableTint">@color/icon_black</item>
+        <item name="android:tint">@color/icon_black</item>
+    </style>
+
 </resources>

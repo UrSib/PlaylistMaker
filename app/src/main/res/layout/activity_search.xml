@@ -19,29 +19,34 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/background_edit_text"
-        android:layout_marginHorizontal="16dp"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="12dp">
+        android:layout_marginHorizontal="@dimen/medium_padding"
+        android:paddingHorizontal="@dimen/medium_short_padding"
+        android:paddingVertical="@dimen/short_padding">
         
         <EditText
             android:id="@+id/edit_text_search"
-            android:layout_width="0dp"
+            style="@style/SearchEditTextStyle"
+            android:layout_width="@dimen/null_size"
             android:layout_height="match_parent"
             android:drawableStart="@drawable/edit_text_search_icon"
             android:drawablePadding="10dp"
             android:layout_weight="1"
             android:background="@drawable/background_edit_text"
             android:hint="@string/search"
-            android:textColorHint="#818C99"
+            android:fontFamily="@font/ys_display_regular"
+            android:textSize="@dimen/low_text_size"
+            android:textFontWeight="400"
+            android:textCursorDrawable="@drawable/cursor"
             android:inputType="text"
             android:maxLength="15"
             android:maxLines="1"/>
 
         <ImageView
             android:id="@+id/clear"
+            style="@style/SearchEditTextStyle"
+            android:paddingVertical="2dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
             android:layout_gravity="center"
             android:src="@drawable/clear"
             android:visibility="gone"/>
