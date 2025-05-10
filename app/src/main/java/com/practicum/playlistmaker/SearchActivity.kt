@@ -13,6 +13,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import com.google.android.material.appbar.AppBarLayout.BaseOnOffsetChangedListener
 import com.google.android.material.appbar.MaterialToolbar
 
 class SearchActivity : AppCompatActivity() {
@@ -22,10 +24,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-
-        if (savedInstanceState != null) {
-            searchText = savedInstanceState.getString("SEARCH_TEXT", searchText)
-        }
 
         val toolbarSearch = findViewById<MaterialToolbar>(R.id.toolbar_search)
         val search = findViewById<EditText>(R.id.edit_text_search)
@@ -56,12 +54,10 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-                clear.visibility = clearVisibility(s)
+                clear.isVisible = clearVisibility(s)
             }
 
             override fun afterTextChanged(s: Editable?) {
-
                 searchText = s.toString()
             }
         }
@@ -70,17 +66,22 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
-    private fun clearVisibility(s: CharSequence?): Int {
+    private fun clearVisibility(s: CharSequence?): Boolean {
         return if (s.isNullOrEmpty()) {
-            View.GONE
+            false
         } else {
-            View.VISIBLE
+            true
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("SEARCH_TEXT", searchText)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        searchText = savedInstanceState.getString("SEARCH_TEXT", searchText)
     }
 
 }
