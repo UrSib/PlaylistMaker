@@ -27,4 +27,18 @@
         <item name="android:tint">@color/white</item>
     </style>
 
+    <style name="nothingWasFoundStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:src">@drawable/ic_nothing_was_found_dark_120</item>
+    </style>
+
+    <style name="communicationProblemStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:src">@drawable/ic_communications_problem_dark_120</item>
+    </style>
+
 </resources>
