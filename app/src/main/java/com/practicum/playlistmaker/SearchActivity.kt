@@ -59,7 +59,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var communicationProblem: ImageView
     private lateinit var refreshButton: Button
     private lateinit var search: EditText
-    private lateinit var history_layout: LinearLayout
+    private lateinit var historyLayout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,14 +68,14 @@ class SearchActivity : AppCompatActivity() {
         searchHistory = SearchHistory(sharedPreferences)
         history = searchHistory.showHistory().toMutableList()
 
-        history_layout = findViewById<LinearLayout>(R.id.history_layout)
+        historyLayout = findViewById<LinearLayout>(R.id.history_layout)
 
         historyAdapter = TrackAdapter(tracks = history, onTrackClick = {})
 
         clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
         clearHistoryButton.setOnClickListener { searchHistory.clearHistory()
             history.clear()
-            history_layout.visibility= View.GONE
+            historyLayout.isVisible= false
            historyAdapter.notifyDataSetChanged()}
 
 
@@ -99,8 +99,8 @@ class SearchActivity : AppCompatActivity() {
 
 
         search.setOnFocusChangeListener { view, hasFocus ->
-            history_layout.visibility =
-                if (hasFocus && search.text.isEmpty()&& history.isNotEmpty()) View.VISIBLE else View.GONE
+            historyLayout.isVisible =
+                if (hasFocus && search.text.isEmpty()&& history.isNotEmpty()) true else false
         }
 
         search.setText(searchText)
@@ -138,8 +138,8 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clear.isVisible = clearVisibility(s)
-                history_layout.visibility =
-                    if (search.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
+                historyLayout.isVisible =
+                    if (search.hasFocus() && s?.isEmpty() == true && history.isNotEmpty()) true else false
             }
 
             override fun afterTextChanged(s: Editable?) {
