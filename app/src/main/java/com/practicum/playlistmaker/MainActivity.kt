@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 
 const val SHARED_PREFERENCES = "shared_preferences"
 const val THEME_KEY = "theme_key"
+const val HISTORY = "history"
 
 
 class MainActivity : AppCompatActivity() {

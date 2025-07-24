@@ -1,10 +1,12 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.text.Editable
+import android.text.Layout
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -13,21 +15,17 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.AppBarLayout.BaseOnOffsetChangedListener
 import com.google.android.material.appbar.MaterialToolbar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.toString
 
 class SearchActivity : AppCompatActivity() {
 
@@ -38,23 +36,58 @@ class SearchActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
+    private val sharedPreferences: SharedPreferences by lazy {
+        getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
+    }
+    private lateinit var searchHistory: SearchHistory
+
     private val itunesService = retrofit.create(ItunesApi::class.java)
 
     private val tracks = ArrayList<Track>()
+    private lateinit var history: MutableList<Track>
+    private lateinit var adapter: TrackAdapter
 
-    private val adapter = TrackAdapter()
+
+    private lateinit var historyAdapter: TrackAdapter
+
 
     var searchText = ""
 
+    private lateinit var clearHistoryButton: Button
     private lateinit var infoText: TextView
     private lateinit var nothingWasFound: ImageView
     private lateinit var communicationProblem: ImageView
     private lateinit var refreshButton: Button
     private lateinit var search: EditText
+    private lateinit var history_layout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        searchHistory = SearchHistory(sharedPreferences)
+        history = searchHistory.showHistory().toMutableList()
+
+        history_layout = findViewById<LinearLayout>(R.id.history_layout)
+
+        historyAdapter = TrackAdapter(tracks = history, onTrackClick = {})
+
+        clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
+        clearHistoryButton.setOnClickListener { searchHistory.clearHistory()
+            history.clear()
+            history_layout.visibility= View.GONE
+           historyAdapter.notifyDataSetChanged()}
+
+
+        adapter = TrackAdapter(tracks = tracks, onTrackClick = { track ->
+            searchHistory.historyEditor(history,track)
+            searchHistory.saveHistory(history.toTypedArray<Track>())
+            historyAdapter.notifyDataSetChanged()
+        })
+
+
+
+
 
         val toolbarSearch = findViewById<MaterialToolbar>(R.id.toolbar_search)
         search = findViewById<EditText>(R.id.edit_text_search)
@@ -63,6 +96,12 @@ class SearchActivity : AppCompatActivity() {
         infoText = findViewById<TextView>(R.id.info_text)
         communicationProblem = findViewById<ImageView>(R.id.ic_communications_problem)
         nothingWasFound = findViewById<ImageView>(R.id.ic_nothing_was_found)
+
+
+        search.setOnFocusChangeListener { view, hasFocus ->
+            history_layout.visibility =
+                if (hasFocus && search.text.isEmpty()&& history.isNotEmpty()) View.VISIBLE else View.GONE
+        }
 
         search.setText(searchText)
 
@@ -86,7 +125,7 @@ class SearchActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
 
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(search.windowToken, 0)
 
         }
@@ -99,12 +138,15 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clear.isVisible = clearVisibility(s)
+                history_layout.visibility =
+                    if (search.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE
             }
 
             override fun afterTextChanged(s: Editable?) {
                 searchText = s.toString()
             }
         }
+
 
         search.addTextChangedListener(simpleTextWatcher)
 
@@ -116,14 +158,18 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-        adapter.tracks = tracks
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
 
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
 
 
+        var historyRecyclerView = findViewById<RecyclerView>(R.id.recycler_view_history)
+
+        historyRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        historyRecyclerView.adapter = historyAdapter
     }
 
     private fun clearVisibility(s: CharSequence?): Boolean {
