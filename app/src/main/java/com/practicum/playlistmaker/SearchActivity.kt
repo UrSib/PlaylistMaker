@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -17,6 +18,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -222,7 +224,7 @@ class SearchActivity : AppCompatActivity() {
                     override fun onResponse(
                         call: Call<TracksResponse>,
                         response: Response<TracksResponse>
-                    ) {
+                    ) { println("Response code: ${response.code()}")
                         if (response.code() == 200) {
                             tracks.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
@@ -243,6 +245,7 @@ class SearchActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                        println("Request failed: ${t.message}")
                         showMessage(getString(R.string.communications_problem), 2)
                         communicationProblem.visibility = View.VISIBLE
                         refreshButton.visibility = View.VISIBLE

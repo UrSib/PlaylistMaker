@@ -1,9 +1,12 @@
 package com.practicum.playlistmaker
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 
 
 class TrackAdapter(
@@ -20,6 +23,11 @@ class TrackAdapter(
         holder.itemView.setOnClickListener {
             val clickTrack = tracks[position]
             onTrackClick.invoke(clickTrack)
+           val playerIntent = Intent(it.context, PlayerActivity::class.java)
+           val gson = Gson()
+           val trackJson = gson.toJson(clickTrack)
+           playerIntent.putExtra("track_json", trackJson)
+           it.context.startActivity(playerIntent)
         }
     }
 

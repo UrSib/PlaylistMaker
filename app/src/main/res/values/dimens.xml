@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="big_button">100dp</dimen>
+    <dimen name="small_button">50dp</dimen>
     <dimen name="long_padding">24dp</dimen>
     <dimen name="long_medium_padding">20dp</dimen>
     <dimen name="medium_padding">16dp</dimen>
