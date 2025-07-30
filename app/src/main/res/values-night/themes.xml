@@ -41,4 +41,30 @@
         <item name="android:src">@drawable/ic_communications_problem_dark_120</item>
     </style>
 
+    <style name="playButtonStyle">
+        <item name="android:layout_width">@dimen/big_button</item>
+        <item name="android:layout_height">@dimen/big_button</item>
+        <item name="android:layout_marginTop">@dimen/long_padding</item>
+        <item name="android:background">@drawable/round_button</item>
+        <item name="android:src">@drawable/play_button_dark</item>
+    </style>
+
+    <style name="addButtonStyle">
+        <item name="android:layout_width">@dimen/small_button</item>
+        <item name="android:layout_height">@dimen/small_button</item>
+        <item name="android:layout_marginTop">@dimen/small_button</item>
+        <item name="android:layout_marginStart">@dimen/long_padding</item>
+        <item name="android:background">@drawable/round_button</item>
+        <item name="android:src">@drawable/add_dark</item>
+    </style>
+
+    <style name="likeButtonStyle">
+        <item name="android:layout_width">@dimen/small_button</item>
+        <item name="android:layout_height">@dimen/small_button</item>
+        <item name="android:layout_marginTop">@dimen/small_button</item>
+        <item name="android:layout_marginEnd">@dimen/long_padding</item>
+        <item name="android:background">@drawable/round_button</item>
+        <item name="android:src">@drawable/like_dark</item>
+    </style>
+
 </resources>
