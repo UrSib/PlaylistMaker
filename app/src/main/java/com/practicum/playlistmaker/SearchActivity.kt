@@ -75,20 +75,19 @@ class SearchActivity : AppCompatActivity() {
         historyAdapter = TrackAdapter(tracks = history, onTrackClick = {})
 
         clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
-        clearHistoryButton.setOnClickListener { searchHistory.clearHistory()
+        clearHistoryButton.setOnClickListener {
+            searchHistory.clearHistory()
             history.clear()
-            historyLayout.isVisible= false
-           historyAdapter.notifyDataSetChanged()}
+            historyLayout.isVisible = false
+            historyAdapter.notifyDataSetChanged()
+        }
 
 
         adapter = TrackAdapter(tracks = tracks, onTrackClick = { track ->
-            searchHistory.historyEditor(history,track)
+            searchHistory.historyEditor(history, track)
             searchHistory.saveHistory(history.toTypedArray<Track>())
             historyAdapter.notifyDataSetChanged()
         })
-
-
-
 
 
         val toolbarSearch = findViewById<MaterialToolbar>(R.id.toolbar_search)
@@ -102,7 +101,7 @@ class SearchActivity : AppCompatActivity() {
 
         search.setOnFocusChangeListener { view, hasFocus ->
             historyLayout.isVisible =
-                if (hasFocus && search.text.isEmpty()&& history.isNotEmpty()) true else false
+                if (hasFocus && search.text.isEmpty() && history.isNotEmpty()) true else false
         }
 
         search.setText(searchText)
@@ -224,7 +223,7 @@ class SearchActivity : AppCompatActivity() {
                     override fun onResponse(
                         call: Call<TracksResponse>,
                         response: Response<TracksResponse>
-                    ) { println("Response code: ${response.code()}")
+                    ) {
                         if (response.code() == 200) {
                             tracks.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
