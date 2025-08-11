@@ -26,7 +26,7 @@ class TrackAdapter(
            val playerIntent = Intent(it.context, PlayerActivity::class.java)
            val gson = Gson()
            val trackJson = gson.toJson(clickTrack)
-           playerIntent.putExtra("track_json", trackJson)
+           playerIntent.putExtra(TRACK_JSON_KEY, trackJson)
            it.context.startActivity(playerIntent)
         }
     }
