@@ -68,9 +68,11 @@ class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
     companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
+    private var isClickAllowed = true
     private val searchRunnable = Runnable { request() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +84,7 @@ class SearchActivity : AppCompatActivity() {
 
         historyLayout = findViewById<LinearLayout>(R.id.history_layout)
 
-        historyAdapter = TrackAdapter(tracks = history, onTrackClick = {})
+        historyAdapter = TrackAdapter(tracks = history, onTrackClick = {},clickDebounce = ::clickDebounce)
 
         clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
         clearHistoryButton.setOnClickListener {
@@ -97,7 +99,7 @@ class SearchActivity : AppCompatActivity() {
             searchHistory.historyEditor(history, track)
             searchHistory.saveHistory(history.toTypedArray<Track>())
             historyAdapter.notifyDataSetChanged()
-        })
+        }, clickDebounce = ::clickDebounce)
 
 
         val toolbarSearch = findViewById<MaterialToolbar>(R.id.toolbar_search)
@@ -135,7 +137,7 @@ class SearchActivity : AppCompatActivity() {
             tracks.clear()
             adapter.notifyDataSetChanged()
 
-           val inputMethodManager =
+            val inputMethodManager =
                 getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(search.windowToken, 0)
 
@@ -261,5 +263,13 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
 }
 

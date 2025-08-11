@@ -11,7 +11,8 @@ import com.google.gson.Gson
 
 class TrackAdapter(
     private val tracks: List<Track>,
-    private val onTrackClick: (Track) -> Unit
+    private val onTrackClick: (Track) -> Unit,
+    private val clickDebounce:()-> Boolean
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
 
@@ -21,13 +22,15 @@ class TrackAdapter(
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
-            val clickTrack = tracks[position]
-            onTrackClick.invoke(clickTrack)
-           val playerIntent = Intent(it.context, PlayerActivity::class.java)
-           val gson = Gson()
-           val trackJson = gson.toJson(clickTrack)
-           playerIntent.putExtra(TRACK_JSON_KEY, trackJson)
-           it.context.startActivity(playerIntent)
+            if (clickDebounce()) {
+                val clickTrack = tracks[position]
+                onTrackClick.invoke(clickTrack)
+                val playerIntent = Intent(it.context, PlayerActivity::class.java)
+                val gson = Gson()
+                val trackJson = gson.toJson(clickTrack)
+                playerIntent.putExtra(TRACK_JSON_KEY, trackJson)
+                it.context.startActivity(playerIntent)
+            }
         }
     }
 
