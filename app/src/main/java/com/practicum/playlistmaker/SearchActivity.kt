@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.Layout
@@ -62,6 +64,14 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var refreshButton: Button
     private lateinit var search: EditText
     private lateinit var historyLayout: LinearLayout
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
+
+    private val searchRunnable = Runnable { request() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +135,7 @@ class SearchActivity : AppCompatActivity() {
             tracks.clear()
             adapter.notifyDataSetChanged()
 
-            val inputMethodManager =
+           val inputMethodManager =
                 getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(search.windowToken, 0)
 
@@ -141,6 +151,7 @@ class SearchActivity : AppCompatActivity() {
                 clear.isVisible = clearVisibility(s)
                 historyLayout.isVisible =
                     if (search.hasFocus() && s?.isEmpty() == true && history.isNotEmpty()) true else false
+                searchDebounce()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -150,15 +161,6 @@ class SearchActivity : AppCompatActivity() {
 
 
         search.addTextChangedListener(simpleTextWatcher)
-
-        search.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                request()
-                true
-            }
-            false
-        }
-
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
 
@@ -252,6 +254,11 @@ class SearchActivity : AppCompatActivity() {
                 })
 
         }
+    }
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
 }
