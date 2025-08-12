@@ -17,6 +17,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -57,6 +58,7 @@ class SearchActivity : AppCompatActivity() {
 
     var searchText = ""
 
+    private lateinit var progressBar: ProgressBar
     private lateinit var clearHistoryButton: Button
     private lateinit var infoText: TextView
     private lateinit var nothingWasFound: ImageView
@@ -84,7 +86,8 @@ class SearchActivity : AppCompatActivity() {
 
         historyLayout = findViewById<LinearLayout>(R.id.history_layout)
 
-        historyAdapter = TrackAdapter(tracks = history, onTrackClick = {},clickDebounce = ::clickDebounce)
+        historyAdapter =
+            TrackAdapter(tracks = history, onTrackClick = {}, clickDebounce = ::clickDebounce)
 
         clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
         clearHistoryButton.setOnClickListener {
@@ -109,7 +112,7 @@ class SearchActivity : AppCompatActivity() {
         infoText = findViewById<TextView>(R.id.info_text)
         communicationProblem = findViewById<ImageView>(R.id.ic_communications_problem)
         nothingWasFound = findViewById<ImageView>(R.id.ic_nothing_was_found)
-
+        progressBar = findViewById<ProgressBar>(R.id.progressBar)
 
         search.setOnFocusChangeListener { view, hasFocus ->
             historyLayout.isVisible =
@@ -220,6 +223,7 @@ class SearchActivity : AppCompatActivity() {
         communicationProblem.visibility = View.GONE
         nothingWasFound.visibility = View.GONE
         refreshButton.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
 
         if (search.text.isNotEmpty()) {
             itunesService.searchTrack(search.text.toString())
@@ -228,6 +232,7 @@ class SearchActivity : AppCompatActivity() {
                         call: Call<TracksResponse>,
                         response: Response<TracksResponse>
                     ) {
+                        progressBar.visibility = View.GONE
                         if (response.code() == 200) {
                             tracks.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
@@ -248,6 +253,7 @@ class SearchActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                        progressBar.visibility = View.GONE
                         println("Request failed: ${t.message}")
                         showMessage(getString(R.string.communications_problem), 2)
                         communicationProblem.visibility = View.VISIBLE
