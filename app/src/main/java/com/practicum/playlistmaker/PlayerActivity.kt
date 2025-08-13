@@ -1,8 +1,11 @@
 package com.practicum.playlistmaker
 
+import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,19 +18,32 @@ import com.google.gson.Gson
 import java.util.Locale
 
 
-
 class PlayerActivity : AppCompatActivity() {
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+    }
+
+    private var playerState = STATE_DEFAULT
+    private lateinit var play: ImageButton
+    private lateinit var pause: ImageButton
+    private var mediaPlayer = MediaPlayer()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
+        play = findViewById<ImageButton>(R.id.play_button)
+        pause = findViewById<ImageButton>(R.id.pause_button)
         val toolbarPlayer = findViewById<MaterialToolbar>(R.id.toolbar_player)
         toolbarPlayer.setNavigationOnClickListener { finish() }
 
         val trackJson = intent.getStringExtra("track_json")
         val gson = Gson()
         val track = gson.fromJson(trackJson, Track::class.java)
-
 
         val cover = findViewById<ImageView>(R.id.cover)
         Glide.with(this)
@@ -54,7 +70,7 @@ class PlayerActivity : AppCompatActivity() {
             collectionNameGroup.visibility = View.GONE
         }
 
-        val releaseDateGroup=findViewById<Group>(R.id.releaseDateGroup)
+        val releaseDateGroup = findViewById<Group>(R.id.releaseDateGroup)
         val releaseDate = findViewById<TextView>(R.id.release_date_content)
         if (track.releaseDate != null) {
             val dateString = track.releaseDate
@@ -63,7 +79,7 @@ class PlayerActivity : AppCompatActivity() {
             val year = SimpleDateFormat("yyyy", Locale.getDefault()).format(parsedDate)
             releaseDate.text = year
         } else {
-            releaseDateGroup.visibility= View.GONE
+            releaseDateGroup.visibility = View.GONE
         }
 
 
@@ -73,6 +89,62 @@ class PlayerActivity : AppCompatActivity() {
         val country = findViewById<TextView>(R.id.country_content)
         country.text = track.country
 
+        val url = track.previewUrl
+        preparePlayer(url)
+        play.setOnClickListener {
+            playbackControl()
+        }
+        pause.setOnClickListener {
+            playbackControl()
+        }
+
     }
 
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
+
+    private fun preparePlayer(url: String) {
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            play.isEnabled = true
+            pause.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            pause.visibility= View.GONE
+            playerState = STATE_PREPARED
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        pause.visibility= View.VISIBLE
+        playerState = STATE_PLAYING
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        pause.visibility= View.GONE
+        playerState = STATE_PAUSED
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
 }
