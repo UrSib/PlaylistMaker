@@ -139,6 +139,10 @@ class SearchActivity : AppCompatActivity() {
 
             tracks.clear()
             adapter.notifyDataSetChanged()
+            infoText.visibility = View.GONE
+            nothingWasFound.visibility = View.GONE
+            communicationProblem.visibility = View.GONE
+            refreshButton.visibility = View.GONE
 
             val inputMethodManager =
                 getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -266,7 +270,11 @@ class SearchActivity : AppCompatActivity() {
 
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        if (search.text.isNotEmpty()) {
+            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        } else {
+            progressBar.visibility = View.GONE
+        }
     }
 
     private fun clickDebounce(): Boolean {

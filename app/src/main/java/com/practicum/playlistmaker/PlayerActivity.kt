@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -27,6 +29,9 @@ class PlayerActivity : AppCompatActivity() {
         private const val STATE_PAUSED = 3
     }
 
+    private var mainThreadHandler: Handler? = null
+
+    private lateinit var progress: TextView
     private var playerState = STATE_DEFAULT
     private lateinit var play: ImageButton
     private lateinit var pause: ImageButton
@@ -36,6 +41,8 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
+        mainThreadHandler = Handler(Looper.getMainLooper())
+        progress = findViewById<TextView>(R.id.progress)
         play = findViewById<ImageButton>(R.id.play_button)
         pause = findViewById<ImageButton>(R.id.pause_button)
         val toolbarPlayer = findViewById<MaterialToolbar>(R.id.toolbar_player)
@@ -92,9 +99,11 @@ class PlayerActivity : AppCompatActivity() {
         val url = track.previewUrl
         preparePlayer(url)
         play.setOnClickListener {
+            mainThreadHandler?.post(updateProgress())
             playbackControl()
         }
         pause.setOnClickListener {
+            mainThreadHandler?.removeCallbacks(updateProgress())
             playbackControl()
         }
 
@@ -108,6 +117,7 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
+        mainThreadHandler?.removeCallbacks(updateProgress())
     }
 
     private fun preparePlayer(url: String) {
@@ -119,20 +129,22 @@ class PlayerActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            pause.visibility= View.GONE
+            mainThreadHandler?.removeCallbacks(updateProgress())
+            pause.visibility = View.GONE
             playerState = STATE_PREPARED
+            progress.text = getString(R.string.progress)
         }
     }
 
     private fun startPlayer() {
         mediaPlayer.start()
-        pause.visibility= View.VISIBLE
+        pause.visibility = View.VISIBLE
         playerState = STATE_PLAYING
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        pause.visibility= View.GONE
+        pause.visibility = View.GONE
         playerState = STATE_PAUSED
     }
 
@@ -144,6 +156,20 @@ class PlayerActivity : AppCompatActivity() {
 
             STATE_PREPARED, STATE_PAUSED -> {
                 startPlayer()
+            }
+        }
+    }
+
+    private fun updateProgress(): Runnable {
+        return object : Runnable {
+            override fun run() {
+                if (playerState==STATE_PLAYING){
+                progress.text = SimpleDateFormat(
+                    "mm:ss",
+                    Locale.getDefault()
+                ).format(mediaPlayer.currentPosition)
+                }
+                mainThreadHandler?.postDelayed(this, 300L)
             }
         }
     }
