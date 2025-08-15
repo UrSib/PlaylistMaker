@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.Layout
@@ -15,6 +17,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -55,6 +58,7 @@ class SearchActivity : AppCompatActivity() {
 
     var searchText = ""
 
+    private lateinit var progressBar: ProgressBar
     private lateinit var clearHistoryButton: Button
     private lateinit var infoText: TextView
     private lateinit var nothingWasFound: ImageView
@@ -62,6 +66,16 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var refreshButton: Button
     private lateinit var search: EditText
     private lateinit var historyLayout: LinearLayout
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
+
+    private var isClickAllowed = true
+    private val searchRunnable = Runnable { request() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +86,8 @@ class SearchActivity : AppCompatActivity() {
 
         historyLayout = findViewById<LinearLayout>(R.id.history_layout)
 
-        historyAdapter = TrackAdapter(tracks = history, onTrackClick = {})
+        historyAdapter =
+            TrackAdapter(tracks = history, onTrackClick = {}, clickDebounce = ::clickDebounce)
 
         clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
         clearHistoryButton.setOnClickListener {
@@ -87,7 +102,7 @@ class SearchActivity : AppCompatActivity() {
             searchHistory.historyEditor(history, track)
             searchHistory.saveHistory(history.toTypedArray<Track>())
             historyAdapter.notifyDataSetChanged()
-        })
+        }, clickDebounce = ::clickDebounce)
 
 
         val toolbarSearch = findViewById<MaterialToolbar>(R.id.toolbar_search)
@@ -97,7 +112,7 @@ class SearchActivity : AppCompatActivity() {
         infoText = findViewById<TextView>(R.id.info_text)
         communicationProblem = findViewById<ImageView>(R.id.ic_communications_problem)
         nothingWasFound = findViewById<ImageView>(R.id.ic_nothing_was_found)
-
+        progressBar = findViewById<ProgressBar>(R.id.progressBar)
 
         search.setOnFocusChangeListener { view, hasFocus ->
             historyLayout.isVisible =
@@ -124,6 +139,10 @@ class SearchActivity : AppCompatActivity() {
 
             tracks.clear()
             adapter.notifyDataSetChanged()
+            infoText.visibility = View.GONE
+            nothingWasFound.visibility = View.GONE
+            communicationProblem.visibility = View.GONE
+            refreshButton.visibility = View.GONE
 
             val inputMethodManager =
                 getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -141,6 +160,7 @@ class SearchActivity : AppCompatActivity() {
                 clear.isVisible = clearVisibility(s)
                 historyLayout.isVisible =
                     if (search.hasFocus() && s?.isEmpty() == true && history.isNotEmpty()) true else false
+                searchDebounce()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -150,15 +170,6 @@ class SearchActivity : AppCompatActivity() {
 
 
         search.addTextChangedListener(simpleTextWatcher)
-
-        search.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                request()
-                true
-            }
-            false
-        }
-
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
 
@@ -216,6 +227,7 @@ class SearchActivity : AppCompatActivity() {
         communicationProblem.visibility = View.GONE
         nothingWasFound.visibility = View.GONE
         refreshButton.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
 
         if (search.text.isNotEmpty()) {
             itunesService.searchTrack(search.text.toString())
@@ -224,6 +236,7 @@ class SearchActivity : AppCompatActivity() {
                         call: Call<TracksResponse>,
                         response: Response<TracksResponse>
                     ) {
+                        progressBar.visibility = View.GONE
                         if (response.code() == 200) {
                             tracks.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
@@ -244,6 +257,7 @@ class SearchActivity : AppCompatActivity() {
                     }
 
                     override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                        progressBar.visibility = View.GONE
                         println("Request failed: ${t.message}")
                         showMessage(getString(R.string.communications_problem), 2)
                         communicationProblem.visibility = View.VISIBLE
@@ -254,5 +268,22 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        if (search.text.isNotEmpty()) {
+            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        } else {
+            progressBar.visibility = View.GONE
+        }
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
 }
 

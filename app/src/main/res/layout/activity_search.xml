@@ -58,6 +58,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+       <ProgressBar
+           android:id="@+id/progressBar"
+           android:layout_width="@dimen/progress_bar"
+           android:layout_height="@dimen/progress_bar"
+           android:layout_marginTop="148dp"
+           android:layout_gravity="center"
+           android:indeterminateTint="@color/blue"
+           android:visibility="gone"/>
+
         <LinearLayout
             android:id="@+id/history_layout"
             android:layout_width="match_parent"
@@ -106,7 +115,6 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_marginTop="@dimen/long_padding"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
