@@ -1,17 +1,13 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.preference.PreferenceManager
 import android.text.Editable
-import android.text.Layout
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -19,9 +15,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -116,7 +110,7 @@ class SearchActivity : AppCompatActivity() {
 
         search.setOnFocusChangeListener { view, hasFocus ->
             historyLayout.isVisible =
-                if (hasFocus && search.text.isEmpty() && history.isNotEmpty()) true else false
+                hasFocus && search.text.isEmpty() && history.isNotEmpty()
         }
 
         search.setText(searchText)
@@ -142,7 +136,7 @@ class SearchActivity : AppCompatActivity() {
             infoText.visibility = View.GONE
             nothingWasFound.visibility = View.GONE
             communicationProblem.visibility = View.GONE
-            refreshButton.visibility = View.GONE
+            refreshButton.isVisible = false
 
             val inputMethodManager =
                 getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -159,7 +153,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clear.isVisible = clearVisibility(s)
                 historyLayout.isVisible =
-                    if (search.hasFocus() && s?.isEmpty() == true && history.isNotEmpty()) true else false
+                    search.hasFocus() && s?.isEmpty() == true && history.isNotEmpty()
                 searchDebounce()
             }
 
@@ -204,30 +198,30 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showMessage(text: String, c: Int) {
         if (text.isNotEmpty()) {
-            infoText.visibility = View.VISIBLE
+            infoText.isVisible = true
             if (c == 1) {
-                nothingWasFound.visibility = View.VISIBLE
+                nothingWasFound.isVisible = true
             } else {
-                communicationProblem.visibility = View.VISIBLE
-                refreshButton.visibility = View.VISIBLE
+                communicationProblem.isVisible = true
+                refreshButton.isVisible = true
             }
             tracks.clear()
             adapter.notifyDataSetChanged()
             infoText.text = text
         } else {
-            infoText.visibility = View.GONE
-            communicationProblem.visibility = View.GONE
-            nothingWasFound.visibility = View.GONE
-            refreshButton.visibility = View.GONE
+            infoText.isVisible = false
+            communicationProblem.isVisible = false
+            nothingWasFound.isVisible = false
+            refreshButton.isVisible = false
         }
     }
 
     private fun request() {
 
-        communicationProblem.visibility = View.GONE
-        nothingWasFound.visibility = View.GONE
-        refreshButton.visibility = View.GONE
-        progressBar.visibility = View.VISIBLE
+        communicationProblem.isVisible = false
+        nothingWasFound.isVisible = false
+        refreshButton.isVisible = false
+        progressBar.isVisible = true
 
         if (search.text.isNotEmpty()) {
             itunesService.searchTrack(search.text.toString())
@@ -236,7 +230,7 @@ class SearchActivity : AppCompatActivity() {
                         call: Call<TracksResponse>,
                         response: Response<TracksResponse>
                     ) {
-                        progressBar.visibility = View.GONE
+                        progressBar.isVisible = false
                         if (response.code() == 200) {
                             tracks.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
@@ -245,14 +239,14 @@ class SearchActivity : AppCompatActivity() {
                                 showMessage("", 1)
                             } else {
                                 showMessage(getString(R.string.nothing_was_found), 1)
-                                nothingWasFound.visibility = View.VISIBLE
+                                nothingWasFound.isVisible = true
 
                             }
 
                         } else {
                             showMessage(getString(R.string.communications_problem), 2)
-                            communicationProblem.visibility = View.VISIBLE
-                            refreshButton.visibility = View.VISIBLE
+                            communicationProblem.isVisible = true
+                            refreshButton.isVisible = true
                         }
                     }
 
@@ -260,8 +254,8 @@ class SearchActivity : AppCompatActivity() {
                         progressBar.visibility = View.GONE
                         println("Request failed: ${t.message}")
                         showMessage(getString(R.string.communications_problem), 2)
-                        communicationProblem.visibility = View.VISIBLE
-                        refreshButton.visibility = View.VISIBLE
+                        communicationProblem.isVisible = true
+                        refreshButton.isVisible = true
                     }
                 })
 
@@ -273,7 +267,7 @@ class SearchActivity : AppCompatActivity() {
         if (search.text.isNotEmpty()) {
             handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
         } else {
-            progressBar.visibility = View.GONE
+            progressBar.isVisible = false
         }
     }
 

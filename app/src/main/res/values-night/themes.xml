@@ -46,7 +46,7 @@
         <item name="android:layout_height">@dimen/big_button</item>
         <item name="android:layout_marginTop">@dimen/long_padding</item>
         <item name="android:background">@drawable/round_button</item>
-        <item name="android:src">@drawable/play_button_dark</item>
+        <item name="android:src">@drawable/play_dark</item>
     </style>
 
     <style name="pauseButtonStyle">
@@ -63,7 +63,7 @@
         <item name="android:layout_marginTop">@dimen/small_button</item>
         <item name="android:layout_marginStart">@dimen/long_padding</item>
         <item name="android:background">@drawable/round_button</item>
-        <item name="android:src">@drawable/add_dark</item>
+        <item name="android:src">@drawable/ic_add_dark_51</item>
     </style>
 
     <style name="likeButtonStyle">
@@ -72,7 +72,7 @@
         <item name="android:layout_marginTop">@dimen/small_button</item>
         <item name="android:layout_marginEnd">@dimen/long_padding</item>
         <item name="android:background">@drawable/round_button</item>
-        <item name="android:src">@drawable/like_dark</item>
+        <item name="android:src">@drawable/ic_like_dark_51</item>
     </style>
 
 </resources>

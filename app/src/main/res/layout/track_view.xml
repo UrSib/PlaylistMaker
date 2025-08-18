@@ -66,6 +66,6 @@
         style="@style/trackViewStyle"
         android:layout_gravity="center|end"
         android:layout_marginEnd="@dimen/medium_short_padding"
-        android:src="@drawable/arrow_forward"/>
+        android:src="@drawable/ic_arrow_forward_24"/>
 
 </LinearLayout>

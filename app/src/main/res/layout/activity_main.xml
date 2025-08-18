@@ -28,20 +28,20 @@
         style="@style/MainButtonStyle"
         android:layout_marginTop="@dimen/long_padding"
         android:text="@string/search"
-        app:icon="@drawable/search_icon"/>
+        app:icon="@drawable/ic_search_24"/>
 
 
     <Button
         android:id="@+id/library"
         style="@style/MainButtonStyle"
         android:text="@string/media_library"
-        app:icon="@drawable/media_library_icon"/>
+        app:icon="@drawable/ic_media_library_24"/>
 
     <Button
         android:id="@+id/settings"
         style="@style/MainButtonStyle"
         android:layout_marginBottom="@dimen/long_padding"
         android:text="@string/settings"
-        app:icon="@drawable/settings_icon" />
+        app:icon="@drawable/ic_settings_24" />
 
 </LinearLayout>
