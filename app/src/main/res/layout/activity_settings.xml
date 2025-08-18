@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/arrow_back"
+        app:navigationIcon="@drawable/ic_arrow_back_24"
         app:title="@string/settings"
         app:navigationIconTint="?attr/colorOnPrimary"/>
 
@@ -36,19 +36,19 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/sharing"
         style="@style/SettingsButtonStyle"
-        android:drawableEnd="@drawable/share"
+        android:drawableEnd="@drawable/ic_share_24"
         android:text="@string/share_app" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/support"
         style="@style/SettingsButtonStyle"
-        android:drawableEnd="@drawable/support"
+        android:drawableEnd="@drawable/ic_support_24"
         android:text="@string/support" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/agreement"
         style="@style/SettingsButtonStyle"
-        android:drawableEnd="@drawable/arrow_forward"
+        android:drawableEnd="@drawable/ic_arrow_forward_24"
         android:text="@string/agreement" />
 
 </LinearLayout>

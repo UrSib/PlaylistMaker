@@ -1,17 +1,16 @@
 package com.practicum.playlistmaker
 
-import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.appbar.MaterialToolbar
@@ -74,7 +73,7 @@ class PlayerActivity : AppCompatActivity() {
         if (track.collectionName != null) {
             collectionName.text = track.collectionName
         } else {
-            collectionNameGroup.visibility = View.GONE
+            collectionNameGroup.isVisible = false
         }
 
         val releaseDateGroup = findViewById<Group>(R.id.releaseDateGroup)
@@ -86,7 +85,7 @@ class PlayerActivity : AppCompatActivity() {
             val year = SimpleDateFormat("yyyy", Locale.getDefault()).format(parsedDate)
             releaseDate.text = year
         } else {
-            releaseDateGroup.visibility = View.GONE
+            releaseDateGroup.isVisible = false
         }
 
 
@@ -130,7 +129,7 @@ class PlayerActivity : AppCompatActivity() {
         }
         mediaPlayer.setOnCompletionListener {
             mainThreadHandler?.removeCallbacks(updateProgress())
-            pause.visibility = View.GONE
+            pause.isVisible = false
             playerState = STATE_PREPARED
             progress.text = getString(R.string.progress)
         }
@@ -138,13 +137,13 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun startPlayer() {
         mediaPlayer.start()
-        pause.visibility = View.VISIBLE
+        pause.isVisible = true
         playerState = STATE_PLAYING
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        pause.visibility = View.GONE
+        pause.isVisible = false
         playerState = STATE_PAUSED
     }
 
