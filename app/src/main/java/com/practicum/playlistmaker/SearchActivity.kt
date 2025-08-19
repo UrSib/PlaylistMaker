@@ -42,7 +42,7 @@ class SearchActivity : AppCompatActivity() {
 
     private val itunesService = retrofit.create(ItunesApi::class.java)
 
-    private val tracks = ArrayList<Track>()
+    private val tracks = mutableListOf<Track>()
     private lateinit var history: MutableList<Track>
     private lateinit var adapter: TrackAdapter
 
