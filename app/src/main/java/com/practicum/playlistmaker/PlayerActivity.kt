@@ -1,10 +1,12 @@
 package com.practicum.playlistmaker
 
+import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.TypedValue
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -52,10 +54,13 @@ class PlayerActivity : AppCompatActivity() {
         val track = gson.fromJson(trackJson, Track::class.java)
 
         val cover = findViewById<ImageView>(R.id.cover)
+
+        val px = this.dpToPx(8F)
+
         Glide.with(this)
             .load(track.getCoverArtWork())
             .placeholder(R.drawable.cover_placeholder)
-            .transform(RoundedCorners(8))
+            .transform(RoundedCorners(px))
             .into(cover)
 
         val trackName = findViewById<TextView>(R.id.track_name)
