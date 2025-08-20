@@ -179,11 +179,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearVisibility(s: CharSequence?): Boolean {
-        return if (s.isNullOrEmpty()) {
-            false
-        } else {
-            true
-        }
+        return !s.isNullOrEmpty()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -196,14 +192,20 @@ class SearchActivity : AppCompatActivity() {
         searchText = savedInstanceState.getString("SEARCH_TEXT", searchText)
     }
 
-    private fun showMessage(text: String, c: Int) {
+    enum class MessageType {
+        NOTHING_FOUND,
+        COMMUNICATION_PROBLEM
+    }
+
+    private fun showMessage(text: String, type: MessageType) {
         if (text.isNotEmpty()) {
             infoText.isVisible = true
-            if (c == 1) {
-                nothingWasFound.isVisible = true
-            } else {
-                communicationProblem.isVisible = true
-                refreshButton.isVisible = true
+            when (type) {
+                MessageType.NOTHING_FOUND -> nothingWasFound.isVisible = true
+                MessageType.COMMUNICATION_PROBLEM -> {
+                    communicationProblem.isVisible = true
+                    refreshButton.isVisible = true
+                }
             }
             tracks.clear()
             adapter.notifyDataSetChanged()
@@ -231,20 +233,21 @@ class SearchActivity : AppCompatActivity() {
                         response: Response<TracksResponse>
                     ) {
                         progressBar.isVisible = false
-                        if (response.code() == 200) {
+                        if (response.isSuccessful) {
                             tracks.clear()
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                tracks.addAll(response.body()?.results!!)
+                            val results = response.body()?.results
+                            if (results?.isNotEmpty() == true) {
+                                tracks.addAll(results)
                                 adapter.notifyDataSetChanged()
-                                showMessage("", 1)
+                                showMessage("", MessageType.NOTHING_FOUND)
                             } else {
-                                showMessage(getString(R.string.nothing_was_found), 1)
+                                showMessage(getString(R.string.nothing_was_found), MessageType.NOTHING_FOUND)
                                 nothingWasFound.isVisible = true
 
                             }
 
                         } else {
-                            showMessage(getString(R.string.communications_problem), 2)
+                            showMessage(getString(R.string.communications_problem), MessageType.COMMUNICATION_PROBLEM)
                             communicationProblem.isVisible = true
                             refreshButton.isVisible = true
                         }
@@ -253,7 +256,7 @@ class SearchActivity : AppCompatActivity() {
                     override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
                         progressBar.visibility = View.GONE
                         println("Request failed: ${t.message}")
-                        showMessage(getString(R.string.communications_problem), 2)
+                        showMessage(getString(R.string.communications_problem), MessageType.COMMUNICATION_PROBLEM)
                         communicationProblem.isVisible = true
                         refreshButton.isVisible = true
                     }
