@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.domain.util
+package com.practicum.playlistmaker
 
 import android.content.Context
 import android.util.TypedValue

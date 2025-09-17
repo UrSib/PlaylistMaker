@@ -1,40 +1,34 @@
-package com.practicum.playlistmaker.data.sp
+package com.practicum.playlistmaker
+
 
 import android.content.SharedPreferences
+import android.widget.Toast
 import com.google.gson.Gson
-import com.practicum.playlistmaker.domain.util.Creator
-import com.practicum.playlistmaker.domain.api.HistoryRepository
-import com.practicum.playlistmaker.domain.models.Track
-import com.practicum.playlistmaker.presentation.activitys.HISTORY
+import kotlin.collections.toTypedArray
 
 
-class HistoryRepositoryImpl(private val sharedPreferences: SharedPreferences) : HistoryRepository {
+class SearchHistory(private val sharedPreferences: SharedPreferences) {
 
-
-    override fun showHistory(): Array<Track> {
-
+    fun showHistory(): Array<Track> {
         val json = sharedPreferences.getString(HISTORY, null) ?: return emptyArray()
         return Gson().fromJson(json, Array<Track>::class.java)
 
-
     }
 
-    override fun saveHistory(history: Array<Track>) {
-
+    fun saveHistory(history: Array<Track>) {
         val json = Gson().toJson(history)
         sharedPreferences.edit()
             ?.putString(HISTORY, json)
             ?.apply()
-
     }
 
-    override fun clearHistory() {
+    fun clearHistory() {
         sharedPreferences.edit()
             ?.putString(HISTORY, null)
             ?.apply()
     }
 
-    override fun historyEditor(history: MutableList<Track>, track: Track) {
+    fun historyEditor(history: MutableList<Track>, track: Track) {
 
         val index = history.indexOfFirst { it.trackId == track.trackId }
         if (index != -1) {

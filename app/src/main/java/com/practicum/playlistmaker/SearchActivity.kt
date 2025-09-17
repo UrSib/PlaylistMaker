@@ -1,5 +1,7 @@
-package com.practicum.playlistmaker.presentation.activitys
+package com.practicum.playlistmaker
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,18 +20,27 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
-import com.practicum.playlistmaker.domain.util.Creator
-import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.domain.api.HistoryInteractor
-import com.practicum.playlistmaker.domain.api.TracksInteractor
-import com.practicum.playlistmaker.domain.models.Track
-import com.practicum.playlistmaker.presentation.track.TrackAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var tracksInteractor: TracksInteractor
+    private val itunesBaseUrl = "https://itunes.apple.com"
 
-    private lateinit var historyInteractor: HistoryInteractor
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(itunesBaseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private val sharedPreferences: SharedPreferences by lazy {
+        getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE)
+    }
+    private lateinit var searchHistory: SearchHistory
+
+    private val itunesService = retrofit.create(ItunesApi::class.java)
 
     private val tracks = mutableListOf<Track>()
     private lateinit var history: MutableList<Track>
@@ -58,18 +69,14 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private var isClickAllowed = true
-
-    private val searchRunnable =
-        Runnable { request() }
+    private val searchRunnable = Runnable { request() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        tracksInteractor = Creator.provideTracksInteractor(application)
-        historyInteractor = Creator.provideHistoryInteractor()
 
-
-        history = historyInteractor.showHistory().toMutableList()
+        searchHistory = SearchHistory(sharedPreferences)
+        history = searchHistory.showHistory().toMutableList()
 
         historyLayout = findViewById<LinearLayout>(R.id.history_layout)
 
@@ -78,7 +85,7 @@ class SearchActivity : AppCompatActivity() {
 
         clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
         clearHistoryButton.setOnClickListener {
-            historyInteractor.clearHistory()
+            searchHistory.clearHistory()
             history.clear()
             historyLayout.isVisible = false
             historyAdapter.notifyDataSetChanged()
@@ -86,8 +93,8 @@ class SearchActivity : AppCompatActivity() {
 
 
         adapter = TrackAdapter(tracks = tracks, onTrackClick = { track ->
-            historyInteractor.historyEditor(history, track)
-            historyInteractor.saveHistory(history.toTypedArray<Track>())
+            searchHistory.historyEditor(history, track)
+            searchHistory.saveHistory(history.toTypedArray<Track>())
             historyAdapter.notifyDataSetChanged()
         }, clickDebounce = ::clickDebounce)
 
@@ -211,9 +218,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-
-
-
     private fun request() {
 
         communicationProblem.isVisible = false
@@ -222,46 +226,44 @@ class SearchActivity : AppCompatActivity() {
         progressBar.isVisible = true
 
         if (search.text.isNotEmpty()) {
-            tracksInteractor.searchTracks(
-                search.text.toString(),
-                object : TracksInteractor.TracksConsumer {
-                    override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                        handler.post {
-                            progressBar.isVisible = false
-
-                            if (foundTracks != null) {
-                                tracks.clear()
-                                tracks.addAll(foundTracks)
+            itunesService.searchTrack(search.text.toString())
+                .enqueue(object : Callback<TracksResponse> {
+                    override fun onResponse(
+                        call: Call<TracksResponse>,
+                        response: Response<TracksResponse>
+                    ) {
+                        progressBar.isVisible = false
+                        if (response.isSuccessful) {
+                            tracks.clear()
+                            val results = response.body()?.results
+                            if (results?.isNotEmpty() == true) {
+                                tracks.addAll(results)
                                 adapter.notifyDataSetChanged()
                                 showMessage("", MessageType.NOTHING_FOUND)
-                            }
-
-                            if (errorMessage != null) {
-                                showMessage(
-                                    getString(R.string.communications_problem),
-                                    MessageType.COMMUNICATION_PROBLEM
-                                )
-                                communicationProblem.isVisible = true
-                                refreshButton.isVisible = true
-                            } else if (tracks.isEmpty()) {
-                                showMessage(
-                                    getString(R.string.nothing_was_found),
-                                    MessageType.NOTHING_FOUND
-                                )
-                                nothingWasFound.isVisible = true
                             } else {
-                                communicationProblem.isVisible = false
-                                nothingWasFound.isVisible = false
-                                refreshButton.isVisible = false
+                                showMessage(getString(R.string.nothing_was_found), MessageType.NOTHING_FOUND)
+                                nothingWasFound.isVisible = true
 
                             }
+
+                        } else {
+                            showMessage(getString(R.string.communications_problem), MessageType.COMMUNICATION_PROBLEM)
+                            communicationProblem.isVisible = true
+                            refreshButton.isVisible = true
                         }
                     }
+
+                    override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                        progressBar.visibility = View.GONE
+                        println("Request failed: ${t.message}")
+                        showMessage(getString(R.string.communications_problem), MessageType.COMMUNICATION_PROBLEM)
+                        communicationProblem.isVisible = true
+                        refreshButton.isVisible = true
+                    }
                 })
+
         }
-
     }
-
 
     private fun searchDebounce() {
         handler.removeCallbacks(searchRunnable)
@@ -280,5 +282,5 @@ class SearchActivity : AppCompatActivity() {
         }
         return current
     }
-
 }
+
