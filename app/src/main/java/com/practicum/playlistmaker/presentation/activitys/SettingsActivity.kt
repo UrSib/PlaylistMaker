@@ -1,15 +1,14 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation.activitys
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
-import androidx.core.content.edit
-
+import com.practicum.playlistmaker.presentation.activitys.App
+import com.practicum.playlistmaker.R
 
 class SettingsActivity : AppCompatActivity() {
 

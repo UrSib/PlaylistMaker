@@ -1,13 +1,12 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation.track
 
 import android.content.Intent
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-
+import com.practicum.playlistmaker.presentation.activitys.PlayerActivity
+import com.practicum.playlistmaker.presentation.activitys.TRACK_JSON_KEY
+import com.practicum.playlistmaker.domain.models.Track
 
 class TrackAdapter(
     private val tracks: List<Track>,
