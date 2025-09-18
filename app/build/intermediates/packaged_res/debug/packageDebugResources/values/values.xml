@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="blue">#3772E7</color>
+    <color name="gray">#AEAFB4</color>
+    <color name="icon_black">#1A1B22</color>
+    <color name="light_black">#000000</color>
+    <color name="light_blue">#9FBBF3</color>
+    <color name="light_gray">#E6E8EB</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="yellow">#FCD452</color>
+    <dimen name="big_button">100dp</dimen>
+    <dimen name="long_medium_padding">20dp</dimen>
+    <dimen name="long_padding">24dp</dimen>
+    <dimen name="low_low_text_size">12sp</dimen>
+    <dimen name="low_text_size">16sp</dimen>
+    <dimen name="medium_padding">16dp</dimen>
+    <dimen name="medium_short_padding">12dp</dimen>
+    <dimen name="null_size">0dp</dimen>
+    <dimen name="progress_bar">44dp</dimen>
+    <dimen name="short_padding">8dp</dimen>
+    <dimen name="small_button">50dp</dimen>
+    <dimen name="text_size">22sp</dimen>
+    <string name="agreement">Пользовательское соглашение</string>
+    <string name="app_name">Playlist Maker</string>
+    <string name="body_support">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="clear_history">Очистить историю</string>
+    <string name="collection_name">Альбом</string>
+    <string name="communications_problem">Проблемы со связью\n\n Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="country">Страна</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="developer">https://practicum.yandex.ru/android-developer/?from=catalog</string>
+    <string name="email_support">AYarYand@ya.ru</string>
+    <string name="media_library">Медиатека</string>
+    <string name="nothing_was_found">Ничего не нашлось</string>
+    <string name="offer">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="playlist_maker">Playlist maker</string>
+    <string name="primary_genre">Жанр</string>
+    <string name="progress">00:00</string>
+    <string name="refresh">Обновить</string>
+    <string name="release_date">Год</string>
+    <string name="search">Поиск</string>
+    <string name="settings">Настройки</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="subject_support">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="support">Написать в поддержку</string>
+    <string name="track_time">Длительность</string>
+    <string name="was_looking_for">Вы искали</string>
+    <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/gray</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSecondary">@color/blue</item>
+        <item name="colorSecondaryVariant">@color/light_black</item>
+        <item name="colorOnSecondary">@color/white</item>
+    </style>
+    <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/null_size</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:paddingTop">@dimen/medium_padding</item>
+        <item name="android:layout_marginHorizontal">@dimen/medium_padding</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">@dimen/medium_padding</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/short_padding</item>
+        <item name="iconTint">@color/black</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+    <style name="SearchEditTextStyle">
+        <item name="android:textColor">@color/icon_black</item>
+        <item name="android:textColorHint">?attr/colorPrimaryVariant</item>
+        <item name="android:drawableTint">?attr/colorPrimaryVariant</item>
+        <item name="android:tint">?attr/colorPrimaryVariant</item>
+    </style>
+    <style name="SettingsButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingHorizontal">@dimen/medium_padding</item>
+        <item name="android:paddingVertical">@dimen/long_medium_padding</item>
+        <item name="android:textColor">?attr/colorSecondaryVariant</item>
+        <item name="android:textSize">@dimen/low_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:drawableTint">?attr/colorPrimaryVariant</item>
+    </style>
+    <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker"/>
+    <style name="addButtonStyle">
+        <item name="android:layout_width">@dimen/small_button</item>
+        <item name="android:layout_height">@dimen/small_button</item>
+        <item name="android:layout_marginTop">@dimen/small_button</item>
+        <item name="android:layout_marginStart">@dimen/long_padding</item>
+        <item name="android:background">@drawable/round_button</item>
+        <item name="android:src">@drawable/ic_add_51</item>
+    </style>
+    <style name="communicationProblemStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:src">@drawable/ic_communications_problem_light_120</item>
+    </style>
+    <style name="likeButtonStyle">
+        <item name="android:layout_width">@dimen/small_button</item>
+        <item name="android:layout_height">@dimen/small_button</item>
+        <item name="android:layout_marginTop">@dimen/small_button</item>
+        <item name="android:layout_marginEnd">@dimen/long_padding</item>
+        <item name="android:background">@drawable/round_button</item>
+        <item name="android:src">@drawable/ic_like_51</item>
+    </style>
+    <style name="nameStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/long_padding</item>
+        <item name="android:layout_marginEnd">@dimen/long_padding</item>
+        <item name="android:layout_marginTop">@dimen/long_padding</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="nothingWasFoundStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:src">@drawable/ic_nothing_was_found_light_120</item>
+    </style>
+    <style name="pauseButtonStyle">
+        <item name="android:layout_width">@dimen/big_button</item>
+        <item name="android:layout_height">@dimen/big_button</item>
+        <item name="android:layout_marginTop">@dimen/long_padding</item>
+        <item name="android:background">@drawable/round_button</item>
+        <item name="android:src">@drawable/pause</item>
+    </style>
+    <style name="playButtonStyle">
+        <item name="android:layout_width">@dimen/big_button</item>
+        <item name="android:layout_height">@dimen/big_button</item>
+        <item name="android:layout_marginTop">@dimen/long_padding</item>
+        <item name="android:background">@drawable/round_button</item>
+        <item name="android:src">@drawable/play</item>
+    </style>
+    <style name="playerResultStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/medium_padding</item>
+        <item name="android:layout_marginTop">@dimen/medium_padding</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/low_low_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+    <style name="playerTitleStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/medium_padding</item>
+        <item name="android:layout_marginTop">@dimen/medium_padding</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">@dimen/low_low_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+    <style name="progressStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/short_padding</item>
+        <item name="android:text">@string/progress</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">@dimen/low_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+    <style name="trackViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/low_low_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">?attr/colorPrimaryVariant</item>
+        <item name="android:tint">?attr/colorPrimaryVariant</item>
+    </style>
+</resources>

@@ -1,0 +1,258 @@
+[
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/layout_activity_settings.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/layout/activity_settings.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/xml_data_extraction_rules.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_media_library_24.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_media_library_24.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_text_light_italic.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_text_light_italic.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/layout_activity_main.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_nothing_was_found_dark_120.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_nothing_was_found_dark_120.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_display_light.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_display_light.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_communications_problem_dark_120.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_communications_problem_dark_120.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_play_dark.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/play_dark.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_support_24.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_support_24.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_like_51.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_like_51.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_display_thin.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_display_thin.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_search_24.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_search_24.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_display_bold.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_display_bold.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_round_button.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/round_button.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/layout_activity_player.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/layout/activity_player.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_display_medium.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_display_medium.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_pause_dark.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/pause_dark.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/color_switch_thumb_color.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/color/switch_thumb_color.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_clear_16.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_clear_16.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_text_medium_italic.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_text_medium_italic.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_display_heavy.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_display_heavy.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_text_bold_italic.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_text_bold_italic.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_text_bold.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_text_bold.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_share_24.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_share_24.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_add_dark_51.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_add_dark_51.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_arrow_forward_24.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_arrow_forward_24.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_text_medium.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_text_medium.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_play.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/play.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_settings_24.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_settings_24.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_edit_text_search_14.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_edit_text_search_14.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_pause.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/pause.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_text_regular_italic.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_text_regular_italic.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_communications_problem_light_120.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_communications_problem_light_120.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-anydpi_ic_launcher.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-anydpi/ic_launcher.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_nothing_was_found_light_120.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_nothing_was_found_light_120.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/layout_track_view.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/layout/track_view.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_text_regular.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_text_regular.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-anydpi_ic_launcher_round.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-anydpi/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/layout_activity_search.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/layout/activity_search.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_cursor.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/cursor.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_text_light.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_text_light.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_placeholder.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/placeholder.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_add_51.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_add_51.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/color_switch_track_color.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/color/switch_track_color.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_arrow_back_24.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_arrow_back_24.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/xml_backup_rules.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_cover_placeholder.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/cover_placeholder.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_background_edit_text.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/background_edit_text.xml"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/font_ys_display_regular.ttf.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/font/ys_display_regular.ttf"
+    },
+    {
+        "merged": "com.practicum.playlistmaker.app-debug-32:/drawable_ic_like_dark_51.xml.flat",
+        "source": "com.practicum.playlistmaker.app-main-34:/drawable/ic_like_dark_51.xml"
+    }
+]
