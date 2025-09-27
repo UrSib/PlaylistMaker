@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.data.sp
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.practicum.playlistmaker.domain.util.Creator
+import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.domain.api.HistoryRepository
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.presentation.activitys.HISTORY

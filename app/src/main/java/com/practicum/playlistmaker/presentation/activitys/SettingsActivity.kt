@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
-import com.practicum.playlistmaker.presentation.activitys.App
+import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.R
 
 class SettingsActivity : AppCompatActivity() {
