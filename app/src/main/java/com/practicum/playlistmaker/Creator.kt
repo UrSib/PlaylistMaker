@@ -7,14 +7,18 @@ import com.practicum.playlistmaker.data.MediaPlayerRepositoryImpl
 import com.practicum.playlistmaker.data.TracksRepositoryImpl
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.data.sp.HistoryRepositoryImpl
+import com.practicum.playlistmaker.data.sp.ThemeRepositoryImpl
 import com.practicum.playlistmaker.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.domain.api.HistoryRepository
 import com.practicum.playlistmaker.domain.api.MediaPlayerInteractor
 import com.practicum.playlistmaker.domain.api.MediaPlayerRepository
+import com.practicum.playlistmaker.domain.api.ThemeInteractor
+import com.practicum.playlistmaker.domain.api.ThemeRepository
 import com.practicum.playlistmaker.domain.api.TracksInteractor
 import com.practicum.playlistmaker.domain.api.TracksRepository
 import com.practicum.playlistmaker.domain.impl.HistoryInteractorImpl
 import com.practicum.playlistmaker.domain.impl.MediaPlayerInteractorImpl
+import com.practicum.playlistmaker.domain.impl.ThemeInteractorImpl
 import com.practicum.playlistmaker.domain.impl.TracksInteractorImpl
 import com.practicum.playlistmaker.presentation.activitys.SHARED_PREFERENCES
 
@@ -38,6 +42,10 @@ object Creator {
         return MediaPlayerRepositoryImpl()
     }
 
+    private fun getThemeRepository(): ThemeRepository {
+        return ThemeRepositoryImpl(provideSharedPreferences())
+    }
+
     fun provideTracksInteractor(application: Application): TracksInteractor {
         return TracksInteractorImpl(getTracksRepository(application))
     }
@@ -52,6 +60,10 @@ object Creator {
 
     fun provideMediaPlayerInteractor(): MediaPlayerInteractor {
         return MediaPlayerInteractorImpl(getMediaPlayerRepository())
+    }
+
+    fun provideThemeInteractor(): ThemeInteractor {
+        return ThemeInteractorImpl(getThemeRepository())
     }
 
 }

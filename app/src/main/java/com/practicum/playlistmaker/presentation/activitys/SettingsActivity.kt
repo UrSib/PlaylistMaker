@@ -8,23 +8,26 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 import com.practicum.playlistmaker.App
+import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.api.ThemeInteractor
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var themeInteractor: ThemeInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        var sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE)
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         val agreement = findViewById<MaterialTextView>(R.id.agreement)
         val sharing = findViewById<MaterialTextView>(R.id.sharing)
         val support = findViewById<MaterialTextView>(R.id.support)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
-        themeSwitcher.isChecked = sharedPreferences.getBoolean(THEME_KEY, false)
+        themeInteractor = Creator.provideThemeInteractor()
+        themeSwitcher.isChecked = themeInteractor.checkTheme()
 
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             (applicationContext as App).switchTheme(checked)
