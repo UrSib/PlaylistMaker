@@ -3,6 +3,7 @@ package com.practicum.playlistmaker
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.MediaPlayer
 import com.practicum.playlistmaker.data.MediaPlayerRepositoryImpl
 import com.practicum.playlistmaker.data.TracksRepositoryImpl
 import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
@@ -39,7 +40,7 @@ object Creator {
     }
 
     private fun getMediaPlayerRepository(): MediaPlayerRepository {
-        return MediaPlayerRepositoryImpl()
+        return MediaPlayerRepositoryImpl(provideMediaPlayer())
     }
 
     private fun getThemeRepository(): ThemeRepository {
@@ -66,4 +67,7 @@ object Creator {
         return ThemeInteractorImpl(getThemeRepository())
     }
 
+    fun provideMediaPlayer(): MediaPlayer {
+        return MediaPlayer()
+    }
 }

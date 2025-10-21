@@ -1,20 +1,17 @@
 package com.practicum.playlistmaker.domain.api
 
-import android.app.Application
-import android.os.Handler
-import android.widget.ImageButton
-import android.widget.TextView
-
 interface MediaPlayerRepository {
 
-    fun startPlayer(pause: ImageButton)
-    fun pausePlayer(pause: ImageButton)
+    fun preparePlayer(url: String)
+    fun startPlayer()
+    fun pausePlayer()
 
     fun releasePlayer()
 
-    fun preparePlayer(application: Application, url: String, play: ImageButton, pause: ImageButton, progress: TextView, mainThreadHandler: Handler?)
+    fun playbackControl()
 
-    fun playbackControl(pause: ImageButton)
+    fun setListener(listener: PlayerInteractorListener)
 
-    fun updateProgress(progress: TextView, mainThreadHandler: Handler?): Runnable
+    fun updateProgress(): Runnable
+
 }

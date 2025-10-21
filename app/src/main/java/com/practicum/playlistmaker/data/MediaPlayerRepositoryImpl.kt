@@ -1,42 +1,42 @@
 package com.practicum.playlistmaker.data
 
-import android.app.Application
-import android.icu.text.SimpleDateFormat
 import android.media.MediaPlayer
 import android.os.Handler
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
-
-
-import androidx.core.view.isVisible
-import com.practicum.playlistmaker.R
+import android.os.Looper
 import com.practicum.playlistmaker.domain.api.MediaPlayerRepository
-import com.practicum.playlistmaker.presentation.activitys.PlayerActivity
+import com.practicum.playlistmaker.domain.api.PlayerInteractorListener
+import com.practicum.playlistmaker.domain.models.PlayerState
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class MediaPlayerRepositoryImpl() : MediaPlayerRepository {
+class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepository {
 
-    companion object {
-         const val STATE_DEFAULT = 0
-         const val STATE_PREPARED = 1
-         const val STATE_PLAYING = 2
-         const val STATE_PAUSED = 3
+    var playerState = PlayerState.STATE_DEFAULT
+    private var listener: PlayerInteractorListener? = null
+    private val mainThreadHandler = Handler(Looper.getMainLooper())
+
+    override fun preparePlayer(url: String) {
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playerState = PlayerState.STATE_PREPARED
+            listener?.onPrepared()
+        }
+        mediaPlayer.setOnCompletionListener {
+            playerState = PlayerState.STATE_PREPARED
+            listener?.onCompletion()
+        }
     }
-    private val mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
 
-    override fun startPlayer(pause: ImageButton) {
+    override fun startPlayer() {
         mediaPlayer.start()
-        pause.isVisible = true
-        playerState = STATE_PLAYING
+        playerState = PlayerState.STATE_PLAYING
     }
 
-    override fun pausePlayer(pause: ImageButton) {
+    override fun pausePlayer() {
         mediaPlayer.pause()
-        pause.isVisible = false
-        playerState = STATE_PAUSED
+        playerState = PlayerState.STATE_PAUSED
 
     }
 
@@ -44,45 +44,39 @@ class MediaPlayerRepositoryImpl() : MediaPlayerRepository {
         mediaPlayer.release()
     }
 
-    override  fun preparePlayer(application: Application, url: String, play: ImageButton, pause: ImageButton, progress: TextView, mainThreadHandler: Handler?) {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            play.isEnabled = true
-            pause.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            mainThreadHandler?.removeCallbacks(updateProgress(progress, mainThreadHandler))
-            pause.isVisible = false
-            playerState = STATE_PREPARED
-            progress.text = application.getString(R.string.progress)
-        }
-    }
-
-    override fun playbackControl(pause: ImageButton) {
+    override fun playbackControl() {
         when (playerState) {
-            STATE_PLAYING -> {
-                pausePlayer(pause)
+            PlayerState.STATE_PLAYING -> {
+                pausePlayer()
+                listener?.isPlay()
             }
 
-           STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer(pause)
+            PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
+                startPlayer()
+                listener?.isPause()
             }
+
+            PlayerState.STATE_DEFAULT -> TODO()
         }
     }
 
-    override fun updateProgress(progress: TextView, mainThreadHandler: Handler?): Runnable {
+    override fun setListener(listener: PlayerInteractorListener) {
+        this.listener = listener
+    }
+
+    override fun updateProgress(): Runnable {
         return object : Runnable {
             override fun run() {
-                if (playerState== STATE_PLAYING){
-                    progress.text = SimpleDateFormat(
+                if (playerState == PlayerState.STATE_PLAYING) {
+                    val progressText = SimpleDateFormat(
                         "mm:ss",
                         Locale.getDefault()
                     ).format(mediaPlayer.currentPosition)
+                    listener?.onProgressUpdated(progressText)
                 }
-                mainThreadHandler?.postDelayed(this, 300L)
+                mainThreadHandler.postDelayed(this, 300L)
             }
         }
     }
+
 }

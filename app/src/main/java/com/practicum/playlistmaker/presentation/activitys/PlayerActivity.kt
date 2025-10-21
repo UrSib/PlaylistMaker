@@ -17,15 +17,15 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.Creator
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.domain.api.MediaPlayerInteractor
+import com.practicum.playlistmaker.domain.api.PlayerInteractorListener
 import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.domain.util.dpToPx
 import java.util.Locale
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerActivity : AppCompatActivity(), PlayerInteractorListener {
 
 
     private var mainThreadHandler: Handler? = null
-
     private lateinit var progress: TextView
     private lateinit var play: ImageButton
     private lateinit var pause: ImageButton
@@ -36,8 +36,9 @@ class PlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-        mediaPlayerInteractor = Creator.provideMediaPlayerInteractor()
 
+        mediaPlayerInteractor = Creator.provideMediaPlayerInteractor()
+        mediaPlayerInteractor.setListener(this)
 
 
         mainThreadHandler = Handler(Looper.getMainLooper())
@@ -100,35 +101,23 @@ class PlayerActivity : AppCompatActivity() {
 
         val url = track.previewUrl
 
-        mediaPlayerInteractor.preparePlayer(
-            application,
-            url,
-            play,
-            pause,
-            progress,
-            mainThreadHandler
-        )
+        mediaPlayerInteractor.preparePlayer(url)
+
         play.setOnClickListener {
 
             mainThreadHandler?.post(
-                mediaPlayerInteractor.updateProgress(
-                    progress,
-                    mainThreadHandler
-                )
+                mediaPlayerInteractor.updateProgress()
             )
 
-            mediaPlayerInteractor.playbackControl(pause)
+            mediaPlayerInteractor.playbackControl()
         }
         pause.setOnClickListener {
 
             mainThreadHandler?.post(
-                mediaPlayerInteractor.updateProgress(
-                    progress,
-                    mainThreadHandler
-                )
+                mediaPlayerInteractor.updateProgress()
             )
 
-            mediaPlayerInteractor.playbackControl(pause)
+            mediaPlayerInteractor.playbackControl()
         }
 
     }
@@ -136,14 +125,37 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
 
-        mediaPlayerInteractor.pausePlayer(pause)
+        mediaPlayerInteractor.pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayerInteractor.releasePlayer()
 
-        mainThreadHandler?.post(mediaPlayerInteractor.updateProgress(progress, mainThreadHandler))
+        mainThreadHandler?.post(mediaPlayerInteractor.updateProgress())
     }
 
+    override fun onProgressUpdated(progressValue: String) {
+        progress.text = progressValue
+    }
+
+    override fun onPrepared() {
+        play.isEnabled = true
+        pause.isEnabled = true
+
+    }
+
+    override fun onCompletion() {
+        mainThreadHandler?.removeCallbacks(mediaPlayerInteractor.updateProgress())
+        pause.isVisible = false
+        progress.text = getString(R.string.progress)
+    }
+
+    override fun isPlay() {
+        pause.isVisible = false
+    }
+
+    override fun isPause() {
+        pause.isVisible = true
+    }
 }
