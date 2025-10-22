@@ -1,12 +1,9 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation.activitys
 
-import android.content.Context
 import android.icu.text.SimpleDateFormat
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.TypedValue
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,30 +14,32 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
-
+import com.practicum.playlistmaker.Creator
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.api.MediaPlayerInteractor
+import com.practicum.playlistmaker.domain.api.PlayerInteractorListener
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.domain.util.dpToPx
 import java.util.Locale
 
+class PlayerActivity : AppCompatActivity(), PlayerInteractorListener {
 
-class PlayerActivity : AppCompatActivity() {
-
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-    }
 
     private var mainThreadHandler: Handler? = null
-
     private lateinit var progress: TextView
-    private var playerState = STATE_DEFAULT
     private lateinit var play: ImageButton
     private lateinit var pause: ImageButton
-    private var mediaPlayer = MediaPlayer()
+
+    private lateinit var mediaPlayerInteractor: MediaPlayerInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
+
+
+        mediaPlayerInteractor = Creator.provideMediaPlayerInteractor()
+        mediaPlayerInteractor.setListener(this)
+
 
         mainThreadHandler = Handler(Looper.getMainLooper())
         progress = findViewById<TextView>(R.id.progress)
@@ -101,80 +100,62 @@ class PlayerActivity : AppCompatActivity() {
         country.text = track.country
 
         val url = track.previewUrl
-        preparePlayer(url)
+
+        mediaPlayerInteractor.preparePlayer(url)
+
         play.setOnClickListener {
-            mainThreadHandler?.post(updateProgress())
-            playbackControl()
+
+            mainThreadHandler?.post(
+                mediaPlayerInteractor.updateProgress()
+            )
+
+            mediaPlayerInteractor.playbackControl()
         }
         pause.setOnClickListener {
-            mainThreadHandler?.removeCallbacks(updateProgress())
-            playbackControl()
+
+            mainThreadHandler?.post(
+                mediaPlayerInteractor.updateProgress()
+            )
+
+            mediaPlayerInteractor.playbackControl()
         }
 
     }
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+
+        mediaPlayerInteractor.pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
-        mainThreadHandler?.removeCallbacks(updateProgress())
+        mediaPlayerInteractor.releasePlayer()
+
+        mainThreadHandler?.post(mediaPlayerInteractor.updateProgress())
     }
 
-    private fun preparePlayer(url: String) {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            play.isEnabled = true
-            pause.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            mainThreadHandler?.removeCallbacks(updateProgress())
-            pause.isVisible = false
-            playerState = STATE_PREPARED
-            progress.text = getString(R.string.progress)
-        }
+    override fun onProgressUpdated(progressValue: String) {
+        progress.text = progressValue
     }
 
-    private fun startPlayer() {
-        mediaPlayer.start()
-        pause.isVisible = true
-        playerState = STATE_PLAYING
+    override fun onPrepared() {
+        play.isEnabled = true
+        pause.isEnabled = true
+
     }
 
-    private fun pausePlayer() {
-        mediaPlayer.pause()
+    override fun onCompletion() {
+        mainThreadHandler?.removeCallbacks(mediaPlayerInteractor.updateProgress())
         pause.isVisible = false
-        playerState = STATE_PAUSED
+        progress.text = getString(R.string.progress)
     }
 
-    private fun playbackControl() {
-        when (playerState) {
-            STATE_PLAYING -> {
-                pausePlayer()
-            }
-
-            STATE_PREPARED, STATE_PAUSED -> {
-                startPlayer()
-            }
-        }
+    override fun isPlay() {
+        pause.isVisible = false
     }
 
-    private fun updateProgress(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (playerState==STATE_PLAYING){
-                progress.text = SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(mediaPlayer.currentPosition)
-                }
-                mainThreadHandler?.postDelayed(this, 300L)
-            }
-        }
+    override fun isPause() {
+        pause.isVisible = true
     }
 }
