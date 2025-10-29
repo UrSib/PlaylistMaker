@@ -15,6 +15,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
@@ -26,20 +27,12 @@ import com.practicum.playlistmaker.search.domain.TracksInteractor
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var tracksInteractor: TracksInteractor
-
-    private lateinit var historyInteractor: HistoryInteractor
-
+    private var viewModel: SearchViewModel? = null
     private val tracks = mutableListOf<Track>()
-    private lateinit var history: MutableList<Track>
+    private var history = mutableListOf<Track>()
     private lateinit var adapter: TrackAdapter
-
-
     private lateinit var historyAdapter: TrackAdapter
-
-
     var searchText = ""
-
     private lateinit var progressBar: ProgressBar
     private lateinit var clearHistoryButton: Button
     private lateinit var infoText: TextView
@@ -53,22 +46,23 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
-
     private var isClickAllowed = true
+    private var simpleTextWatcher: TextWatcher? = null
 
-    private val searchRunnable =
-        Runnable { request() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        tracksInteractor = Creator.provideTracksInteractor(application)
-        historyInteractor = Creator.provideHistoryInteractor()
 
+        viewModel = ViewModelProvider(this, SearchViewModel.getFactory())
+            .get(SearchViewModel::class.java)
 
-        history = historyInteractor.showHistory().toMutableList()
+        viewModel?.observeState()?.observe(this) {
+            render(it)
+        }
+
+        viewModel?.showHistory()
 
         historyLayout = findViewById<LinearLayout>(R.id.history_layout)
 
@@ -77,7 +71,9 @@ class SearchActivity : AppCompatActivity() {
 
         clearHistoryButton = findViewById<Button>(R.id.clear_history_button)
         clearHistoryButton.setOnClickListener {
-            historyInteractor.clearHistory()
+
+            viewModel?.onClearHistoryButtonClick()
+
             history.clear()
             historyLayout.isVisible = false
             historyAdapter.notifyDataSetChanged()
@@ -85,9 +81,9 @@ class SearchActivity : AppCompatActivity() {
 
 
         adapter = TrackAdapter(tracks = tracks, onTrackClick = { track ->
-            historyInteractor.historyEditor(history, track)
-            historyInteractor.saveHistory(history.toTypedArray<Track>())
-            historyAdapter.notifyDataSetChanged()
+
+            viewModel?.onTrackClick(track)
+
         }, clickDebounce = ::clickDebounce)
 
 
@@ -101,8 +97,13 @@ class SearchActivity : AppCompatActivity() {
         progressBar = findViewById<ProgressBar>(R.id.progressBar)
 
         search.setOnFocusChangeListener { view, hasFocus ->
+
+            viewModel?.showHistory()
+
+
             historyLayout.isVisible =
                 hasFocus && search.text.isEmpty() && history.isNotEmpty()
+
         }
 
         search.setText(searchText)
@@ -115,14 +116,13 @@ class SearchActivity : AppCompatActivity() {
 
         refreshButton.setOnClickListener {
 
-            request()
+            viewModel?.onRefreshButtonClick()
 
         }
 
         clear.setOnClickListener {
 
             search.setText("")
-
             tracks.clear()
             adapter.notifyDataSetChanged()
             infoText.visibility = View.GONE
@@ -136,26 +136,22 @@ class SearchActivity : AppCompatActivity() {
 
         }
 
-        val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-                // TODO:
-            }
-
+        simpleTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
                 clear.isVisible = clearVisibility(s)
+
                 historyLayout.isVisible =
                     search.hasFocus() && s?.isEmpty() == true && history.isNotEmpty()
-                searchDebounce()
-            }
 
-            override fun afterTextChanged(s: Editable?) {
-                searchText = s.toString()
+                viewModel?.searchDebounce(
+                    changedText = s?.toString() ?: ""
+                )
             }
         }
-
-
-        search.addTextChangedListener(simpleTextWatcher)
+        simpleTextWatcher?.let { search.addTextChangedListener(it) }
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
 
@@ -184,12 +180,8 @@ class SearchActivity : AppCompatActivity() {
         searchText = savedInstanceState.getString("SEARCH_TEXT", searchText)
     }
 
-    enum class MessageType {
-        NOTHING_FOUND,
-        COMMUNICATION_PROBLEM
-    }
-
     private fun showMessage(text: String, type: MessageType) {
+        progressBar.isVisible = false
         if (text.isNotEmpty()) {
             infoText.isVisible = true
             when (type) {
@@ -210,67 +202,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-    private fun request() {
-
-        communicationProblem.isVisible = false
-        nothingWasFound.isVisible = false
-        refreshButton.isVisible = false
-        progressBar.isVisible = true
-
-        if (search.text.isNotEmpty()) {
-            tracksInteractor.searchTracks(
-                search.text.toString(),
-                object : TracksInteractor.TracksConsumer {
-                    override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                        handler.post {
-                            progressBar.isVisible = false
-
-                            if (foundTracks != null) {
-                                tracks.clear()
-                                tracks.addAll(foundTracks)
-                                adapter.notifyDataSetChanged()
-                                showMessage("", MessageType.NOTHING_FOUND)
-                            }
-
-                            if (errorMessage != null) {
-                                showMessage(
-                                    getString(R.string.communications_problem),
-                                    MessageType.COMMUNICATION_PROBLEM
-                                )
-                                communicationProblem.isVisible = true
-                                refreshButton.isVisible = true
-                            } else if (tracks.isEmpty()) {
-                                showMessage(
-                                    getString(R.string.nothing_was_found),
-                                    MessageType.NOTHING_FOUND
-                                )
-                                nothingWasFound.isVisible = true
-                            } else {
-                                communicationProblem.isVisible = false
-                                nothingWasFound.isVisible = false
-                                refreshButton.isVisible = false
-
-                            }
-                        }
-                    }
-                })
-        }
-
-    }
-
-
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        if (search.text.isNotEmpty()) {
-            handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-        } else {
-            progressBar.isVisible = false
-        }
-    }
-
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -280,4 +211,44 @@ class SearchActivity : AppCompatActivity() {
         return current
     }
 
+    fun render(state: SearchState) {
+        when (state) {
+            is SearchState.Loading -> showLoading()
+            is SearchState.Content -> showContent(state.tracks)
+            is SearchState.History -> showHistory(state.history)
+            is SearchState.Error -> showMessage(state.message, state.type)
+
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        simpleTextWatcher?.let { search.removeTextChangedListener(it) }
+    }
+
+    private fun showLoading() {
+        communicationProblem.isVisible = false
+        nothingWasFound.isVisible = false
+        refreshButton.isVisible = false
+        progressBar.isVisible = true
+    }
+
+    private fun showContent(tracksList: List<Track>) {
+
+        communicationProblem.isVisible = false
+        nothingWasFound.isVisible = false
+        refreshButton.isVisible = false
+        progressBar.isVisible = false
+
+        tracks.clear()
+        tracks.addAll(tracksList)
+        adapter.notifyDataSetChanged()
+
+    }
+
+    private fun showHistory(tracksList: List<Track>) {
+        history.clear()
+        history.addAll(tracksList)
+        historyAdapter.notifyDataSetChanged()
+    }
 }

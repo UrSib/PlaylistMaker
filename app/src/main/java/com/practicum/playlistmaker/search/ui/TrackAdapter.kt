@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.main.ui.TRACK_JSON_KEY
 import com.practicum.playlistmaker.search.domain.Track
+import kotlin.collections.mutableListOf
 
 class TrackAdapter(
     private val tracks: List<Track>,
