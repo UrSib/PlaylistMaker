@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.player.data
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import com.practicum.playlistmaker.player.domain.api.MediaPlayerRepository
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractorListener
 import com.practicum.playlistmaker.player.domain.PlayerState
@@ -12,7 +13,7 @@ import java.util.Locale
 class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepository {
 
     var playerState = PlayerState.STATE_DEFAULT
-    private var listener: PlayerInteractorListener? = null
+   private var listener: PlayerInteractorListener? = null
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     override fun preparePlayer(url: String) {
@@ -20,7 +21,6 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
             playerState = PlayerState.STATE_PREPARED
-            listener?.onPrepared()
         }
         mediaPlayer.setOnCompletionListener {
             playerState = PlayerState.STATE_PREPARED
@@ -47,12 +47,12 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
         when (playerState) {
             PlayerState.STATE_PLAYING -> {
                 pausePlayer()
-                listener?.isPlay()
+
             }
 
             PlayerState.STATE_PREPARED, PlayerState.STATE_PAUSED -> {
                 startPlayer()
-                listener?.isPause()
+
             }
 
             PlayerState.STATE_DEFAULT -> TODO()
@@ -71,7 +71,7 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
                         "mm:ss",
                         Locale.getDefault()
                     ).format(mediaPlayer.currentPosition)
-                    listener?.onProgressUpdated(progressText)
+                   listener?.onProgressUpdated(progressText)
                 }
                 mainThreadHandler.postDelayed(this, 300L)
             }

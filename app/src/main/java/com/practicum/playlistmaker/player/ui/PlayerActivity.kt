@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.appbar.MaterialToolbar
@@ -17,31 +18,24 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.dpToPx
+import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.player.domain.api.MediaPlayerInteractor
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractorListener
 import com.practicum.playlistmaker.search.domain.Track
+import com.practicum.playlistmaker.search.ui.SearchViewModel
 import java.util.Locale
 
-class PlayerActivity : AppCompatActivity(), PlayerInteractorListener {
+class PlayerActivity : AppCompatActivity() {
 
-
-    private var mainThreadHandler: Handler? = null
+    private var viewModel: PlayerViewModel? = null
     private lateinit var progress: TextView
     private lateinit var play: ImageButton
     private lateinit var pause: ImageButton
-
-    private lateinit var mediaPlayerInteractor: MediaPlayerInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
 
-
-        mediaPlayerInteractor = Creator.provideMediaPlayerInteractor()
-        mediaPlayerInteractor.setListener(this)
-
-
-        mainThreadHandler = Handler(Looper.getMainLooper())
         progress = findViewById<TextView>(R.id.progress)
         play = findViewById<ImageButton>(R.id.play_button)
         pause = findViewById<ImageButton>(R.id.pause_button)
@@ -92,7 +86,6 @@ class PlayerActivity : AppCompatActivity(), PlayerInteractorListener {
             releaseDateGroup.isVisible = false
         }
 
-
         val primaryGenreName = findViewById<TextView>(R.id.primary_genre_name_content)
         primaryGenreName.text = track.primaryGenreName
 
@@ -101,23 +94,44 @@ class PlayerActivity : AppCompatActivity(), PlayerInteractorListener {
 
         val url = track.previewUrl
 
-        mediaPlayerInteractor.preparePlayer(url)
+        viewModel = ViewModelProvider(this, PlayerViewModel.getFactory(url))
+            .get(PlayerViewModel::class.java)
+
+        viewModel?.observePlayerState()?.observe(this) {
+            when (it) {
+                PlayerState.STATE_PREPARED -> {
+                    play.isEnabled = true
+                    pause.isEnabled = true
+                    pause.isVisible = false
+                    progress.text = getString(R.string.progress)
+                }
+
+                PlayerState.STATE_PLAYING -> {
+                    pause.isVisible = true
+                }
+
+                PlayerState.STATE_PAUSED -> {
+                    pause.isVisible = false
+                }
+
+                else -> {// TODO:
+                }
+            }
+        }
+
+        viewModel?.observeProgressTime()?.observe(this) {
+            progress.text = it
+        }
 
         play.setOnClickListener {
 
-            mainThreadHandler?.post(
-                mediaPlayerInteractor.updateProgress()
-            )
+            viewModel?.onPlayClick()
 
-            mediaPlayerInteractor.playbackControl()
         }
         pause.setOnClickListener {
 
-            mainThreadHandler?.post(
-                mediaPlayerInteractor.updateProgress()
-            )
+            viewModel?.onPauseClick()
 
-            mediaPlayerInteractor.playbackControl()
         }
 
     }
@@ -125,37 +139,11 @@ class PlayerActivity : AppCompatActivity(), PlayerInteractorListener {
     override fun onPause() {
         super.onPause()
 
-        mediaPlayerInteractor.pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayerInteractor.releasePlayer()
-
-        mainThreadHandler?.post(mediaPlayerInteractor.updateProgress())
+        viewModel?.onDestroy()
     }
 
-    override fun onProgressUpdated(progressValue: String) {
-        progress.text = progressValue
-    }
-
-    override fun onPrepared() {
-        play.isEnabled = true
-        pause.isEnabled = true
-
-    }
-
-    override fun onCompletion() {
-        mainThreadHandler?.removeCallbacks(mediaPlayerInteractor.updateProgress())
-        pause.isVisible = false
-        progress.text = getString(R.string.progress)
-    }
-
-    override fun isPlay() {
-        pause.isVisible = false
-    }
-
-    override fun isPause() {
-        pause.isVisible = true
-    }
 }

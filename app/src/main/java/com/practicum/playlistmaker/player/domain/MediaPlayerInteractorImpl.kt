@@ -27,7 +27,7 @@ class MediaPlayerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRe
         mediaPlayerRepository.playbackControl()
     }
 
-    override fun setListener(listener: PlayerInteractorListener) {
+   override fun setListener(listener: PlayerInteractorListener) {
         mediaPlayerRepository.setListener(listener)
     }
 
