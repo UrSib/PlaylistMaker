@@ -7,6 +7,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.MediaLibraryActivity
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.ActivityMainBinding
 import com.practicum.playlistmaker.search.ui.SearchActivity
 import com.practicum.playlistmaker.settings.ui.SettingsActivity
 
@@ -17,13 +18,13 @@ const val TRACK_JSON_KEY = "track_json"
 
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val search = findViewById<Button>(R.id.search)
-        val library = findViewById<Button>(R.id.library)
-        val settings = findViewById<Button>(R.id.settings)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val searchIntent = Intent(this, SearchActivity::class.java)
 
@@ -36,16 +37,16 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        search.setOnClickListener(searchClickListener)
+        binding.search.setOnClickListener(searchClickListener)
 
-        library.setOnClickListener {
+        binding.library.setOnClickListener {
 
             val libraryIntent = Intent(this, MediaLibraryActivity::class.java)
             startActivity(libraryIntent)
 
         }
 
-        settings.setOnClickListener {
+        binding.settings.setOnClickListener {
 
             val settingsIntent = Intent(this, SettingsActivity::class.java)
             startActivity(settingsIntent)

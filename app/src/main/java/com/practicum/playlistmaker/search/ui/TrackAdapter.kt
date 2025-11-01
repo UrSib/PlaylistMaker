@@ -17,7 +17,7 @@ class TrackAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder =
-        TrackViewHolder(parent)
+        TrackViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(tracks[position])

@@ -10,37 +10,34 @@ import com.google.android.material.textview.MaterialTextView
 import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 import com.practicum.playlistmaker.settings.domain.ThemeInteractor
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivitySettingsBinding
     private lateinit var themeInteractor: ThemeInteractor
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
-        val agreement = findViewById<MaterialTextView>(R.id.agreement)
-        val sharing = findViewById<MaterialTextView>(R.id.sharing)
-        val support = findViewById<MaterialTextView>(R.id.support)
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         themeInteractor = Creator.provideThemeInteractor()
-        themeSwitcher.isChecked = themeInteractor.checkTheme()
+        binding.themeSwitcher.isChecked = themeInteractor.checkTheme()
 
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+        binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             (applicationContext as App).switchTheme(checked)
 
         }
 
-        toolbar.setNavigationOnClickListener {
+        binding.toolbar.setNavigationOnClickListener {
 
             finish()
 
         }
 
-        agreement.setOnClickListener {
+        binding.agreement.setOnClickListener {
 
             val url = getString(R.string.offer)
             val agreementIntent = Intent(Intent.ACTION_VIEW)
@@ -49,7 +46,7 @@ class SettingsActivity : AppCompatActivity() {
 
         }
 
-        sharing.setOnClickListener {
+        binding.sharing.setOnClickListener {
 
             val sharingIntent = Intent(Intent.ACTION_SEND)
             sharingIntent.setType("text/plain")
@@ -59,7 +56,7 @@ class SettingsActivity : AppCompatActivity() {
 
         }
 
-        support.setOnClickListener {
+        binding.support.setOnClickListener {
 
             val uri = Uri.parse("mailto:${getString(R.string.email_support)}")
                 .buildUpon()

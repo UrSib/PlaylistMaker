@@ -17,6 +17,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.dpToPx
 import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.player.domain.api.MediaPlayerInteractor
@@ -27,26 +28,19 @@ import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityPlayerBinding
     private var viewModel: PlayerViewModel? = null
-    private lateinit var progress: TextView
-    private lateinit var play: ImageButton
-    private lateinit var pause: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        progress = findViewById<TextView>(R.id.progress)
-        play = findViewById<ImageButton>(R.id.play_button)
-        pause = findViewById<ImageButton>(R.id.pause_button)
-        val toolbarPlayer = findViewById<MaterialToolbar>(R.id.toolbar_player)
-        toolbarPlayer.setNavigationOnClickListener { finish() }
+        binding.toolbarPlayer.setNavigationOnClickListener { finish() }
 
         val trackJson = intent.getStringExtra("track_json")
         val gson = Gson()
         val track = gson.fromJson(trackJson, Track::class.java)
-
-        val cover = findViewById<ImageView>(R.id.cover)
 
         val px = this.dpToPx(8F)
 
@@ -54,43 +48,34 @@ class PlayerActivity : AppCompatActivity() {
             .load(track.getCoverArtWork())
             .placeholder(R.drawable.cover_placeholder)
             .transform(RoundedCorners(px))
-            .into(cover)
+            .into(binding.cover)
 
-        val trackName = findViewById<TextView>(R.id.track_name)
-        trackName.text = track.trackName
+        binding.trackName.text = track.trackName
 
-        val artistName = findViewById<TextView>(R.id.artist_name)
-        artistName.text = track.artistName
+        binding.artistName.text = track.artistName
 
-        val trackTimeMillis = findViewById<TextView>(R.id.track_time_content)
-        trackTimeMillis.text =
+        binding.trackTimeContent.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
-        val collectionNameGroup = findViewById<Group>(R.id.collectionNameGroup)
-        val collectionName = findViewById<TextView>(R.id.collection_name_content)
         if (track.collectionName != null) {
-            collectionName.text = track.collectionName
+            binding.collectionNameContent.text = track.collectionName
         } else {
-            collectionNameGroup.isVisible = false
+            binding.collectionNameGroup.isVisible = false
         }
 
-        val releaseDateGroup = findViewById<Group>(R.id.releaseDateGroup)
-        val releaseDate = findViewById<TextView>(R.id.release_date_content)
         if (track.releaseDate != null) {
             val dateString = track.releaseDate
             val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
             val parsedDate = formatter.parse(dateString)
             val year = SimpleDateFormat("yyyy", Locale.getDefault()).format(parsedDate)
-            releaseDate.text = year
+            binding.releaseDateContent.text = year
         } else {
-            releaseDateGroup.isVisible = false
+            binding.releaseDateGroup.isVisible = false
         }
 
-        val primaryGenreName = findViewById<TextView>(R.id.primary_genre_name_content)
-        primaryGenreName.text = track.primaryGenreName
+        binding.primaryGenreNameContent.text = track.primaryGenreName
 
-        val country = findViewById<TextView>(R.id.country_content)
-        country.text = track.country
+        binding.countryContent.text = track.country
 
         val url = track.previewUrl
 
@@ -100,18 +85,18 @@ class PlayerActivity : AppCompatActivity() {
         viewModel?.observePlayerState()?.observe(this) {
             when (it) {
                 PlayerState.STATE_PREPARED -> {
-                    play.isEnabled = true
-                    pause.isEnabled = true
-                    pause.isVisible = false
-                    progress.text = getString(R.string.progress)
+                    binding.playButton.isEnabled = true
+                    binding.pauseButton.isEnabled = true
+                    binding.pauseButton.isVisible = false
+                    binding.progress.text = getString(R.string.progress)
                 }
 
                 PlayerState.STATE_PLAYING -> {
-                    pause.isVisible = true
+                    binding.pauseButton.isVisible = true
                 }
 
                 PlayerState.STATE_PAUSED -> {
-                    pause.isVisible = false
+                    binding.pauseButton.isVisible = false
                 }
 
                 else -> {// TODO:
@@ -120,15 +105,15 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel?.observeProgressTime()?.observe(this) {
-            progress.text = it
+            binding.progress.text = it
         }
 
-        play.setOnClickListener {
+        binding.playButton.setOnClickListener {
 
             viewModel?.onPlayClick()
 
         }
-        pause.setOnClickListener {
+        binding.pauseButton.setOnClickListener {
 
             viewModel?.onPauseClick()
 
