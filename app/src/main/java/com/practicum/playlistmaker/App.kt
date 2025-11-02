@@ -19,7 +19,7 @@ class App : Application() {
 
         themeInteractor = Creator.provideThemeInteractor()
 
-        darkTheme = themeInteractor.checkTheme()
+       darkTheme = themeInteractor.checkTheme()
         switchTheme(darkTheme)
     }
 

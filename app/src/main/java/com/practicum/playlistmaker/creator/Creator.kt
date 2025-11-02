@@ -22,6 +22,9 @@ import com.practicum.playlistmaker.search.data.HistoryRepositoryImpl
 import com.practicum.playlistmaker.search.data.TracksRepositoryImpl
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.settings.data.ThemeRepositoryImpl
+import com.practicum.playlistmaker.sharing.data.ExternalNavigator
+import com.practicum.playlistmaker.sharing.domain.SharingInteractor
+import com.practicum.playlistmaker.sharing.domain.SharingInteractorImpl
 
 object Creator {
 
@@ -69,5 +72,16 @@ object Creator {
 
     fun provideMediaPlayer(): MediaPlayer {
         return MediaPlayer()
+    }
+
+    fun provideSharingInteractor(): SharingInteractor {
+        return SharingInteractorImpl(getExternalNavigator())
+    }
+
+    fun getExternalNavigator(): ExternalNavigator{
+        return ExternalNavigator()
+    }
+    fun provideApplication(): Application{
+        return application
     }
 }

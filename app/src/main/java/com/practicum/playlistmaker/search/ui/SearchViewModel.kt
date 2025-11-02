@@ -63,11 +63,6 @@ class SearchViewModel(private val context: Context): ViewModel() {
 
     private fun searchRequest(text:String) {
 
-        /*communicationProblem.isVisible = false
-        nothingWasFound.isVisible = false
-        refreshButton.isVisible = false
-        progressBar.isVisible = true*/
-
         if (text.isNotEmpty()) {
 
         renderState(SearchState.Loading)
@@ -77,37 +72,24 @@ class SearchViewModel(private val context: Context): ViewModel() {
                 object : TracksInteractor.TracksConsumer {
                     override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
                         handler.post {
-                            /*progressBar.isVisible = false*/
+
                             val tracks = mutableListOf<Track>()
                             if (foundTracks != null) {
                                 tracks.clear()
                                 tracks.addAll(foundTracks)
-                                /*adapter.notifyDataSetChanged()
-                                showMessage("", MessageType.NOTHING_FOUND)*/
 
                             }
 
                             if (errorMessage != null) {
-                                /*showMessage(
-                                    getString(R.string.communications_problem),
-                                    MessageType.COMMUNICATION_PROBLEM
-                                )
-                                communicationProblem.isVisible = true
-                                refreshButton.isVisible = true*/
+
                                 renderState(SearchState.Error(context.getString(R.string.communications_problem),
                                     MessageType.COMMUNICATION_PROBLEM))
                             } else if (tracks.isEmpty()) {
-                                /*showMessage(
-                                    getString(R.string.nothing_was_found),
-                                    MessageType.NOTHING_FOUND
-                                )
-                                nothingWasFound.isVisible = true*/
+
                                 renderState(SearchState.Error(context.getString(R.string.nothing_was_found),
                                     MessageType.NOTHING_FOUND))
                             } else {
-                                /*communicationProblem.isVisible = false
-                                nothingWasFound.isVisible = false
-                                refreshButton.isVisible = false*/
+
                                 renderState(SearchState.Content(tracks))
                             }
                         }
