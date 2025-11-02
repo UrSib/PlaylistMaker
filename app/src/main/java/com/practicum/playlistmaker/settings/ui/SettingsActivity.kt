@@ -1,20 +1,10 @@
 package com.practicum.playlistmaker.settings.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.switchmaterial.SwitchMaterial
-import com.google.android.material.textview.MaterialTextView
 import com.practicum.playlistmaker.App
-import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
-import com.practicum.playlistmaker.search.ui.SearchViewModel
-import com.practicum.playlistmaker.settings.domain.ThemeInteractor
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -28,9 +18,10 @@ class SettingsActivity : AppCompatActivity() {
 
         checkTheme()
 
-        binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+        binding.themeSwitcher.setOnCheckedChangeListener {switcher, checked ->
             (applicationContext as App).switchTheme(checked)
             checkTheme()
+
         }
 
         viewModel = ViewModelProvider(this, SettingsViewModel.getFactory())

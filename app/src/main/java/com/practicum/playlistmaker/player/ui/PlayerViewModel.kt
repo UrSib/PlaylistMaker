@@ -47,7 +47,7 @@ class PlayerViewModel(private val url: String) : ViewModel(), PlayerInteractorLi
     override fun onCleared() {
         super.onCleared()
         mainThreadHandler?.removeCallbacks(mediaPlayerInteractor.updateProgress())
-        mediaPlayerInteractor.releasePlayer()
+        mediaPlayerInteractor.pausePlayer()
         progressTimeLiveData.postValue("00:00")
     }
 

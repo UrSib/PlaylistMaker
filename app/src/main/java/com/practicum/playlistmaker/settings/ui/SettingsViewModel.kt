@@ -24,7 +24,12 @@ class SettingsViewModel(private val context: Context) : ViewModel() {
     private val settingsStateLiveData = MutableLiveData(false)
     fun observeSettingsState(): LiveData<Boolean> = settingsStateLiveData
 
+    init {
+        settingsStateLiveData.value = themeInteractor.checkTheme()
+    }
+
     fun checkTheme() {
+        themeInteractor.saveTheme(themeInteractor.checkTheme())
         settingsStateLiveData.postValue(themeInteractor.checkTheme())
     }
 

@@ -4,12 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.sharing.domain.ExternalNavigator
 
 
-class ExternalNavigator {
+class ExternalNavigatorImpl: ExternalNavigator {
 val application = Creator.provideApplication()
 
-    fun shareLink(link:String){
+    override fun shareLink(link:String){
         val sharingIntent = Intent(Intent.ACTION_SEND)
         sharingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         sharingIntent.setType("text/plain")
@@ -19,13 +20,13 @@ val application = Creator.provideApplication()
         application.startActivity(chooser)
 
     }
-    fun openLink(link:String){
+   override fun openLink(link:String){
         val agreementIntent = Intent(Intent.ACTION_VIEW)
         agreementIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         agreementIntent.setData(Uri.parse(link))
         application.startActivity(agreementIntent)
     }
-    fun openEmail(email: String){
+    override fun openEmail(email: String){
         val uri = Uri.parse("mailto:${email}")
             .buildUpon()
             .appendQueryParameter("subject", application.getString(R.string.subject_support))
