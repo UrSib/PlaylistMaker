@@ -1,6 +1,7 @@
 [versions]
-agp = "8.12.3"
+agp = "8.13.0"
 glide = "4.16.0"
+koinAndroid = "3.3.0"
 mockitoCore = "5.18.0"
 retrofit = "2.9.0"
 
@@ -20,6 +21,7 @@ contentpager = "1.0.0"
 [libraries]
 
 
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 livedata = {module = "androidx.lifecycle:lifecycle-livedata-ktx",version = "2.5.1"}
 viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version = "2.5.1" }
 activity = { module = "androidx.activity:activity-ktx", version = "1.6.1" }

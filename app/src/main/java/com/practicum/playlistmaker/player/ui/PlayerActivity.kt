@@ -2,34 +2,27 @@ package com.practicum.playlistmaker.player.ui
 
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.Group
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.dpToPx
 import com.practicum.playlistmaker.player.domain.PlayerState
-import com.practicum.playlistmaker.player.domain.api.MediaPlayerInteractor
-import com.practicum.playlistmaker.player.domain.api.PlayerInteractorListener
 import com.practicum.playlistmaker.search.domain.Track
-import com.practicum.playlistmaker.search.ui.SearchViewModel
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
-
+    private val gson: Gson by inject()
     private lateinit var binding: ActivityPlayerBinding
-    private var viewModel: PlayerViewModel? = null
+
+    private var url: String = ""
+    private val viewModel: PlayerViewModel by viewModel { parametersOf(url) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +32,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.toolbarPlayer.setNavigationOnClickListener { finish() }
 
         val trackJson = intent.getStringExtra("track_json")
-        val gson = Gson()
+
         val track = gson.fromJson(trackJson, Track::class.java)
 
         val px = this.dpToPx(8F)
@@ -77,12 +70,9 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.countryContent.text = track.country
 
-        val url = track.previewUrl
+        url = track.previewUrl
 
-        viewModel = ViewModelProvider(this, PlayerViewModel.getFactory(url))
-            .get(PlayerViewModel::class.java)
-
-        viewModel?.observePlayerState()?.observe(this) {
+        viewModel.observePlayerState().observe(this) {
             when (it) {
                 PlayerState.STATE_PREPARED -> {
                     binding.playButton.isEnabled = true
@@ -104,18 +94,18 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        viewModel?.observeProgressTime()?.observe(this) {
+        viewModel.observeProgressTime().observe(this) {
             binding.progress.text = it
         }
 
         binding.playButton.setOnClickListener {
 
-            viewModel?.onPlayClick()
+            viewModel.onPlayClick()
 
         }
         binding.pauseButton.setOnClickListener {
 
-            viewModel?.onPauseClick()
+            viewModel.onPauseClick()
 
         }
 
@@ -128,7 +118,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel?.onDestroy()
+        viewModel.onDestroy()
     }
 
 }

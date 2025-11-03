@@ -3,10 +3,9 @@ package com.practicum.playlistmaker.player.data
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.player.domain.api.MediaPlayerRepository
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractorListener
-import com.practicum.playlistmaker.player.domain.PlayerState
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -43,6 +42,10 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
         mediaPlayer.release()
     }
 
+    override fun resetPlayer(){
+        mediaPlayer.reset()
+    }
+
     override fun playbackControl() {
         when (playerState) {
             PlayerState.STATE_PLAYING -> {
@@ -55,7 +58,7 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
 
             }
 
-            PlayerState.STATE_DEFAULT -> TODO()
+            PlayerState.STATE_DEFAULT -> resetPlayer()
         }
     }
 

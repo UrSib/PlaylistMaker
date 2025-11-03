@@ -7,29 +7,18 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
-import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.search.domain.HistoryInteractor
 import com.practicum.playlistmaker.search.domain.Track
-import com.practicum.playlistmaker.search.domain.TracksInteractor
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
+    private val viewModel: SearchViewModel by viewModel()
     private lateinit var binding: ActivitySearchBinding
-    private var viewModel: SearchViewModel? = null
+    //private var viewModel: SearchViewModel? = null
     private val tracks = mutableListOf<Track>()
     private var history = mutableListOf<Track>()
     private lateinit var adapter: TrackAdapter
@@ -50,21 +39,20 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, SearchViewModel.getFactory())
-            .get(SearchViewModel::class.java)
 
-        viewModel?.observeState()?.observe(this) {
+
+        viewModel.observeState().observe(this) {
             render(it)
         }
 
-        viewModel?.showHistory()
+        viewModel.showHistory()
 
         historyAdapter =
             TrackAdapter(tracks = history, onTrackClick = {}, clickDebounce = ::clickDebounce)
 
         binding.clearHistoryButton.setOnClickListener {
 
-            viewModel?.onClearHistoryButtonClick()
+            viewModel.onClearHistoryButtonClick()
 
             history.clear()
             binding.historyLayout.isVisible = false
@@ -74,14 +62,14 @@ class SearchActivity : AppCompatActivity() {
 
         adapter = TrackAdapter(tracks = tracks, onTrackClick = { track ->
 
-            viewModel?.onTrackClick(track)
+            viewModel.onTrackClick(track)
 
         }, clickDebounce = ::clickDebounce)
 
 
         binding.editTextSearch.setOnFocusChangeListener { view, hasFocus ->
 
-            viewModel?.showHistory()
+            viewModel.showHistory()
 
 
             binding.historyLayout.isVisible =
@@ -99,7 +87,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.refreshButton.setOnClickListener {
 
-            viewModel?.onRefreshButtonClick()
+            viewModel.onRefreshButtonClick()
 
         }
 
@@ -129,7 +117,7 @@ class SearchActivity : AppCompatActivity() {
                 binding.historyLayout.isVisible =
                     binding.editTextSearch.hasFocus() && s?.isEmpty() == true && history.isNotEmpty()
 
-                viewModel?.searchDebounce(
+                viewModel.searchDebounce(
                     changedText = s?.toString() ?: ""
                 )
             }

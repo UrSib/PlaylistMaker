@@ -9,6 +9,8 @@ interface MediaPlayerInteractor {
 
     fun releasePlayer()
 
+    fun resetPlayer()
+
     fun playbackControl()
 
     fun setListener(listener: PlayerInteractorListener)

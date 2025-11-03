@@ -23,6 +23,10 @@ class MediaPlayerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRe
         mediaPlayerRepository.releasePlayer()
     }
 
+    override fun resetPlayer(){
+        mediaPlayerRepository.resetPlayer()
+    }
+
     override fun playbackControl() {
         mediaPlayerRepository.playbackControl()
     }
