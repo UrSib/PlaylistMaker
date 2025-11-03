@@ -5,10 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.practicum.playlistmaker.App
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
+import com.practicum.playlistmaker.sharing.domain.SharingInteractor
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.getValue
 
 class SettingsActivity : AppCompatActivity() {
 
-    private var viewModel: SettingsViewModel? = null
+    private val viewModel: SettingsViewModel by viewModel()
+
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,10 +29,7 @@ class SettingsActivity : AppCompatActivity() {
 
         }
 
-        viewModel = ViewModelProvider(this, SettingsViewModel.getFactory())
-            .get(SettingsViewModel::class.java)
-
-        viewModel?.observeSettingsState()?.observe(this) {
+        viewModel.observeSettingsState().observe(this) {
             when (it) {
                 true -> {
                     binding.themeSwitcher.isChecked = true
@@ -47,24 +49,24 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.agreement.setOnClickListener {
 
-            viewModel?.onClickAgreement()
+            viewModel.onClickAgreement()
 
         }
 
         binding.sharing.setOnClickListener {
 
-            viewModel?.onClickSharing()
+            viewModel.onClickSharing()
 
         }
 
         binding.support.setOnClickListener {
 
-            viewModel?.onClickSupport()
+            viewModel.onClickSupport()
 
         }
     }
 
     private fun checkTheme() {
-        viewModel?.checkTheme()
+        viewModel.checkTheme()
     }
 }

@@ -58,4 +58,5 @@ dependencies {
     implementation(libs.viewmodel)
     implementation(libs.activity)
     implementation(libs.livedata)
+    implementation(libs.koin.android)
 }

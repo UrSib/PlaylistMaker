@@ -2,12 +2,16 @@ package com.practicum.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.di.dataModule
+import com.practicum.playlistmaker.di.domainModule
+import com.practicum.playlistmaker.di.viewModelModule
 import com.practicum.playlistmaker.settings.domain.ThemeInteractor
-
-private lateinit var themeInteractor: ThemeInteractor
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class App : Application() {
+
 
     var darkTheme = false
 
@@ -15,14 +19,15 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Creator.initApplication(this)
-
-        themeInteractor = Creator.provideThemeInteractor()
+        startKoin {
+            androidContext(this@App)
+            modules(dataModule, domainModule, viewModelModule)
+        }
 
         darkTheme = themeInteractor.checkTheme()
         switchTheme(darkTheme)
     }
-
+    private val themeInteractor: ThemeInteractor by inject()
     fun switchTheme(darkThemeEnabled: Boolean) {
         darkTheme = darkThemeEnabled
         AppCompatDelegate.setDefaultNightMode(
