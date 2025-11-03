@@ -2,7 +2,8 @@ package com.practicum.playlistmaker
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.practicum.playlistmaker.domain.api.ThemeInteractor
+import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.settings.domain.ThemeInteractor
 
 private lateinit var themeInteractor: ThemeInteractor
 
