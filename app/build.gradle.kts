@@ -59,4 +59,5 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.livedata)
     implementation(libs.koin.android)
+    implementation(libs.androidx.fragment.compose)
 }

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker.MediaLibraryActivity
+import com.practicum.playlistmaker.library.ui.MediaLibraryActivity
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityMainBinding
 import com.practicum.playlistmaker.search.ui.SearchActivity

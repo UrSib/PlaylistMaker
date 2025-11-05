@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/colorPrimary"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/clear_history_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:backgroundTint="?attr/colorOnPrimary"
+        android:fontFamily="@font/ys_display_medium"
+        android:paddingHorizontal="@dimen/medium_padding"
+        android:paddingVertical="@dimen/medium_short_padding"
+        android:layout_marginTop="@dimen/long_padding"
+        android:text="@string/new_playlist"
+        android:textAllCaps="false"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/low_text_size"
+        app:cornerRadius="54dp" />
+
+    <ImageView
+        android:id="@+id/ic_nothing_was_found"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/progress_bar"
+        style="@style/nothingWasFoundStyle"
+        android:visibility="visible"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/info_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/long_padding"
+        android:layout_marginTop="@dimen/medium_padding"
+        android:layout_marginBottom="@dimen/long_padding"
+        android:text=""
+        android:fontFamily="@font/ys_display_medium"
+        android:textAlignment="center"
+        android:textColor="?attr/colorOnPrimary"
+        android:textFontWeight="400"
+        android:textSize="@dimen/text_size" />
+
+</LinearLayout>
