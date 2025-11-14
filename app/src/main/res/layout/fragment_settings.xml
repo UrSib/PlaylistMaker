@@ -10,9 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ic_arrow_back_24"
-        app:title="@string/settings"
-        app:navigationIconTint="?attr/colorOnPrimary"/>
+        app:title="@string/settings" />
 
 
     <com.google.android.material.switchmaterial.SwitchMaterial
