@@ -148,4 +148,9 @@
         <item name="android:textSize">@dimen/low_text_size</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
+
+    <style name="BottomNavigationViewStyle" parent="Widget.Design.BottomNavigationView">
+        <item name="itemIconTint">@drawable/bottom_nav_item_color</item>
+        <item name="itemTextColor">@drawable/bottom_nav_item_text_color</item>
+    </style>
 </resources>

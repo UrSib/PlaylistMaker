@@ -2,13 +2,18 @@ package com.practicum.playlistmaker.player.ui
 
 import android.icu.text.SimpleDateFormat
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.TRACK_JSON_KEY
+import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.dpToPx
 import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.search.domain.Track
@@ -17,25 +22,35 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.util.Locale
 
-class PlayerActivity : AppCompatActivity() {
-    private val gson: Gson by inject()
-    private lateinit var binding: ActivityPlayerBinding
+class PlayerFragment : Fragment() {
 
+    private val gson: Gson by inject()
     private var url: String = ""
     private val viewModel: PlayerViewModel by viewModel { parametersOf(url) }
+    private lateinit var binding: FragmentPlayerBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
 
-        binding.toolbarPlayer.setNavigationOnClickListener { finish() }
 
-        val trackJson = intent.getStringExtra("track_json")
 
-        val track = gson.fromJson(trackJson, Track::class.java)
+    }
 
-        val px = this.dpToPx(8F)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.toolbarPlayer.setNavigationOnClickListener { findNavController().navigateUp() }
+
+        val trackJson = arguments?.getString(TRACK_JSON_KEY)
+      val track = gson.fromJson(trackJson, Track::class.java)
+
+
+        val px = requireContext().dpToPx(8F)
 
         Glide.with(this)
             .load(track.getCoverArtWork())
@@ -72,7 +87,7 @@ class PlayerActivity : AppCompatActivity() {
 
         url = track.previewUrl
 
-        viewModel.observePlayerState().observe(this) {
+        viewModel.observePlayerState().observe(viewLifecycleOwner) {
             when (it) {
                 PlayerState.STATE_PREPARED -> {
                     binding.playButton.isEnabled = true
@@ -94,7 +109,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.observeProgressTime().observe(this) {
+        viewModel.observeProgressTime().observe(viewLifecycleOwner) {
             binding.progress.text = it
         }
 
@@ -108,7 +123,6 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.onPauseClick()
 
         }
-
     }
 
     override fun onPause() {

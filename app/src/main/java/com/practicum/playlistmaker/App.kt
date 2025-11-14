@@ -10,6 +10,11 @@ import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
+const val SHARED_PREFERENCES = "shared_preferences"
+const val THEME_KEY = "theme_key"
+const val HISTORY = "history"
+const val TRACK_JSON_KEY = "track_json"
+
 class App : Application() {
 
 

@@ -60,4 +60,6 @@ dependencies {
     implementation(libs.livedata)
     implementation(libs.koin.android)
     implementation(libs.androidx.fragment.compose)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
 }

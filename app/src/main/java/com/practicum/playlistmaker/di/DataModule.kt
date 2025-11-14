@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.di
 import android.content.Context
 import android.media.MediaPlayer
 import com.google.gson.Gson
-import com.practicum.playlistmaker.main.ui.SHARED_PREFERENCES
+import com.practicum.playlistmaker.SHARED_PREFERENCES
 import com.practicum.playlistmaker.player.data.MediaPlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.api.MediaPlayerRepository
 import com.practicum.playlistmaker.search.data.HistoryRepositoryImpl
