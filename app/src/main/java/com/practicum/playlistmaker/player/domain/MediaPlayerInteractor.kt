@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.player.domain.api
 
+import com.practicum.playlistmaker.player.domain.PlayerInteractorListener
+
 interface MediaPlayerInteractor {
 
     fun preparePlayer(url: String)

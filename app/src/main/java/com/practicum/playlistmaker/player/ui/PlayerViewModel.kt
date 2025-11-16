@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.player.domain.api.MediaPlayerInteractor
-import com.practicum.playlistmaker.player.domain.api.PlayerInteractorListener
+import com.practicum.playlistmaker.player.domain.PlayerInteractorListener
 
 
 class PlayerViewModel(private val url: String, private val mediaPlayerInteractor: MediaPlayerInteractor) : ViewModel(), PlayerInteractorListener {

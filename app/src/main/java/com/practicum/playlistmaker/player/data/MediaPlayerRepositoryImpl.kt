@@ -4,8 +4,8 @@ import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import com.practicum.playlistmaker.player.domain.PlayerState
-import com.practicum.playlistmaker.player.domain.api.MediaPlayerRepository
-import com.practicum.playlistmaker.player.domain.api.PlayerInteractorListener
+import com.practicum.playlistmaker.player.domain.MediaPlayerRepository
+import com.practicum.playlistmaker.player.domain.PlayerInteractorListener
 import java.text.SimpleDateFormat
 import java.util.Locale
 

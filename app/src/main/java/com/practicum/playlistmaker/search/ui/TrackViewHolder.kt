@@ -3,15 +3,13 @@ package com.practicum.playlistmaker.search.ui
 import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.TrackViewBinding
 import com.practicum.playlistmaker.search.domain.Track
-import com.practicum.playlistmaker.dpToPx
+import com.practicum.playlistmaker.utils.dpToPx
 import java.util.Locale
 
 class TrackViewHolder(private val binding: TrackViewBinding) : RecyclerView.ViewHolder(binding.root

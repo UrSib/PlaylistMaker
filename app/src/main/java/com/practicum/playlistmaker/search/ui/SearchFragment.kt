@@ -2,8 +2,6 @@ package com.practicum.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -12,9 +10,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.Track
+import com.practicum.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -29,13 +29,13 @@ class SearchFragment : Fragment() {
     private lateinit var historyAdapter: TrackAdapter
     var searchText = ""
 
-    private val handler = Handler(Looper.getMainLooper())
-
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     private var isClickAllowed = true
+
+    private lateinit var trackClickDebounce:(Boolean)-> Unit
     private var simpleTextWatcher: TextWatcher? = null
 
     override fun onCreateView(
@@ -49,6 +49,10 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+         trackClickDebounce = debounce<Boolean>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
+            isClickAllowed = true
+        }
 
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
@@ -167,13 +171,7 @@ class SearchFragment : Fragment() {
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed(
-                { isClickAllowed = true },
-                CLICK_DEBOUNCE_DELAY
-            )
-        }
+        trackClickDebounce(current)
         return current
     }
 

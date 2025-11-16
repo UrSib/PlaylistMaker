@@ -14,7 +14,7 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.TRACK_JSON_KEY
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
-import com.practicum.playlistmaker.dpToPx
+import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.search.domain.Track
 import org.koin.android.ext.android.inject

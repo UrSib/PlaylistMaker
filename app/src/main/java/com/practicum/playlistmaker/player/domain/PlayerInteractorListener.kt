@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.player.domain.api
+package com.practicum.playlistmaker.player.domain
 
 interface PlayerInteractorListener {
     fun onProgressUpdated(progressValue: String)

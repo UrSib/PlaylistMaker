@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.0"
+agp = "8.13.1"
 glide = "4.16.0"
 koinAndroid = "3.3.0"
 mockitoCore = "5.18.0"
