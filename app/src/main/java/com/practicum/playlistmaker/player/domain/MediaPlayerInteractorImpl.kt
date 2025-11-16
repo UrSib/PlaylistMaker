@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.player.domain
 
 import com.practicum.playlistmaker.player.domain.api.MediaPlayerInteractor
+import kotlinx.coroutines.Job
 
 class MediaPlayerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRepository) :
     MediaPlayerInteractor {
@@ -33,7 +34,7 @@ class MediaPlayerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRe
         mediaPlayerRepository.setListener(listener)
     }
 
-    override fun updateProgress(): Runnable {
+    override fun updateProgress(): Job {
         return mediaPlayerRepository.updateProgress()
 
     }

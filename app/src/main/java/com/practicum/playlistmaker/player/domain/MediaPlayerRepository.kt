@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.player.domain
 
+import kotlinx.coroutines.Job
+
 interface MediaPlayerRepository {
 
     fun preparePlayer(url: String)
@@ -14,6 +16,6 @@ interface MediaPlayerRepository {
 
     fun setListener(listener: PlayerInteractorListener)
 
-    fun updateProgress(): Runnable
+   fun updateProgress(): Job
 
 }

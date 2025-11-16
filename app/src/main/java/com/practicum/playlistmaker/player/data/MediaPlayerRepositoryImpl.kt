@@ -1,19 +1,24 @@
 package com.practicum.playlistmaker.player.data
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
-import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.player.domain.MediaPlayerRepository
 import com.practicum.playlistmaker.player.domain.PlayerInteractorListener
+import com.practicum.playlistmaker.player.domain.PlayerState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepository {
 
     var playerState = PlayerState.STATE_DEFAULT
-   private var listener: PlayerInteractorListener? = null
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
+    private var listener: PlayerInteractorListener? = null
+
+    private val mainScope = MainScope()
 
     override fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
@@ -39,10 +44,11 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
     }
 
     override fun releasePlayer() {
+        mainScope.cancel()
         mediaPlayer.release()
     }
 
-    override fun resetPlayer(){
+    override fun resetPlayer() {
         mediaPlayer.reset()
     }
 
@@ -62,23 +68,23 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
         }
     }
 
+
     override fun setListener(listener: PlayerInteractorListener) {
         this.listener = listener
     }
 
-    override fun updateProgress(): Runnable {
-        return object : Runnable {
-            override fun run() {
+    override fun updateProgress(): Job {
+        return mainScope.launch {
+            while (isActive) {
                 if (playerState == PlayerState.STATE_PLAYING) {
                     val progressText = SimpleDateFormat(
                         "mm:ss",
                         Locale.getDefault()
                     ).format(mediaPlayer.currentPosition)
-                   listener?.onProgressUpdated(progressText)
+                    listener?.onProgressUpdated(progressText)
                 }
-                mainThreadHandler.postDelayed(this, 300L)
+                delay(300L)
             }
         }
     }
-
 }
