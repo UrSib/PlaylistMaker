@@ -1,11 +1,8 @@
 package com.practicum.playlistmaker.search.domain
 
-import com.practicum.playlistmaker.search.domain.Track
+import kotlinx.coroutines.flow.Flow
 
 interface TracksInteractor {
-    fun searchTracks(expression: String, consumer: TracksConsumer)
+    fun searchTracks(expression: String) : Flow<Pair<List<Track>?, String?>>
 
-    interface TracksConsumer {
-        fun consume(foundTracks: List<Track>?, errorMessage: String?)
-    }
 }

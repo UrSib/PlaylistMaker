@@ -9,22 +9,35 @@ import androidx.annotation.RequiresPermission
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.dto.Response
 import com.practicum.playlistmaker.search.data.dto.TracksRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitNetworkClient(private val itunesService: ItunesApi, private val context: Context): NetworkClient {
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (isConnected() == false) {
             return Response().apply { resultCode = -1 }
         }
         if (dto is TracksRequest) {
+            return withContext(Dispatchers.IO) {
+                try {
+                    val response = itunesService.searchTrack(dto.expression)
+                    response.apply { resultCode = 200 }
+                } catch (e: Throwable) {
+                    Response().apply { resultCode = 500 }
+                }
+            }
+        }
+
+        /*if (dto is TracksRequest) {
             val resp = itunesService.searchTrack(dto.expression).execute()
 
             val body = resp.body() ?: Response()
 
             return body.apply { resultCode = resp.code() }
-        } else {
+        }*/ else {
             return Response().apply { resultCode = 400 }
         }
     }

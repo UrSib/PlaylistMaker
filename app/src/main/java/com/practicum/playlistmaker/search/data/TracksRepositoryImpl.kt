@@ -5,17 +5,19 @@ import com.practicum.playlistmaker.search.data.dto.TracksRequest
 import com.practicum.playlistmaker.search.data.dto.TracksResponse
 import com.practicum.playlistmaker.search.domain.TracksRepository
 import com.practicum.playlistmaker.search.domain.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
 
-    override fun searchTracks(expression: String): Resource<List<Track>> {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow{
         val response = networkClient.doRequest(TracksRequest(expression))
-        return when (response.resultCode) {
+        when (response.resultCode) {
             -1->{
-                Resource.Error("Communication problem")
+                emit(Resource.Error("Communication problem"))
             }
             200 -> {
-                Resource.Success((response as TracksResponse).results.map {
+                emit(Resource.Success((response as TracksResponse).results.map {
                     Track(
                         it.trackId,
                         it.trackName,
@@ -28,11 +30,11 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                         it.country,
                         it.previewUrl
                     )
-                })
+                }))
             }
 
             else -> {
-                Resource.Error("Communication problem")
+                emit(Resource.Error("Communication problem"))
             }
         }
     }
