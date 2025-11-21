@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.player.domain.api
 
 import com.practicum.playlistmaker.player.domain.PlayerInteractorListener
-import kotlinx.coroutines.Job
+import com.practicum.playlistmaker.player.domain.PlayerState
 
 interface MediaPlayerInteractor {
 
@@ -18,6 +18,8 @@ interface MediaPlayerInteractor {
 
     fun setListener(listener: PlayerInteractorListener)
 
-    fun updateProgress(): Job
+    fun provideState(): PlayerState
+
+    fun provideProgress():String
 
 }

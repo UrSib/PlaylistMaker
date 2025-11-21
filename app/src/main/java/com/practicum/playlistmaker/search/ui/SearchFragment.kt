@@ -91,6 +91,7 @@ class SearchFragment : Fragment() {
             binding.historyLayout.isVisible =
                 hasFocus && binding.editTextSearch.text.isEmpty() && history.isNotEmpty()
 
+
         }
 
         binding.editTextSearch.setText(searchText)
@@ -121,7 +122,8 @@ class SearchFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
+                if (s.isNullOrEmpty()) { tracks.clear()
+                    adapter.notifyDataSetChanged() }
                 binding.clear.isVisible = clearVisibility(s)
 
                 binding.historyLayout.isVisible =
@@ -194,7 +196,11 @@ class SearchFragment : Fragment() {
         binding.icCommunicationsProblem.isVisible = false
         binding.icNothingWasFound.isVisible = false
         binding.refreshButton.isVisible = false
+        binding.infoText.isVisible = false
         binding.progressBar.isVisible = true
+
+        tracks.clear()
+        adapter.notifyDataSetChanged()
     }
 
     private fun showContent(tracksList: List<Track>) {
@@ -203,7 +209,6 @@ class SearchFragment : Fragment() {
         binding.icNothingWasFound.isVisible = false
         binding.refreshButton.isVisible = false
         binding.progressBar.isVisible = false
-
         tracks.clear()
         tracks.addAll(tracksList)
         adapter.notifyDataSetChanged()
@@ -211,6 +216,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showHistory(tracksList: List<Track>) {
+
         history.clear()
         history.addAll(tracksList)
         historyAdapter.notifyDataSetChanged()

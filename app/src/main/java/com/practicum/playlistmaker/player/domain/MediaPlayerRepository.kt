@@ -16,6 +16,8 @@ interface MediaPlayerRepository {
 
     fun setListener(listener: PlayerInteractorListener)
 
-   fun updateProgress(): Job
+    fun provideState(): PlayerState
+
+    fun provideProgress():String
 
 }

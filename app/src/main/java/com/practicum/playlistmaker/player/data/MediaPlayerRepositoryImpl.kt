@@ -4,12 +4,6 @@ import android.media.MediaPlayer
 import com.practicum.playlistmaker.player.domain.MediaPlayerRepository
 import com.practicum.playlistmaker.player.domain.PlayerInteractorListener
 import com.practicum.playlistmaker.player.domain.PlayerState
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -17,8 +11,6 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
 
     var playerState = PlayerState.STATE_DEFAULT
     private var listener: PlayerInteractorListener? = null
-
-    private val mainScope = MainScope()
 
     override fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
@@ -44,7 +36,6 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
     }
 
     override fun releasePlayer() {
-        mainScope.cancel()
         mediaPlayer.release()
     }
 
@@ -73,18 +64,14 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
         this.listener = listener
     }
 
-    override fun updateProgress(): Job {
-        return mainScope.launch {
-            while (isActive) {
-                if (playerState == PlayerState.STATE_PLAYING) {
-                    val progressText = SimpleDateFormat(
-                        "mm:ss",
-                        Locale.getDefault()
-                    ).format(mediaPlayer.currentPosition)
-                    listener?.onProgressUpdated(progressText)
-                }
-                delay(300L)
-            }
-        }
+    override fun provideState(): PlayerState {
+        return playerState
+    }
+
+    override fun provideProgress(): String {
+        return SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(mediaPlayer.currentPosition)
     }
 }
