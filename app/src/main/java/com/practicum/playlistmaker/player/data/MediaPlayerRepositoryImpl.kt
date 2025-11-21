@@ -1,19 +1,16 @@
 package com.practicum.playlistmaker.player.data
 
 import android.media.MediaPlayer
-import android.os.Handler
-import android.os.Looper
+import com.practicum.playlistmaker.player.domain.MediaPlayerRepository
+import com.practicum.playlistmaker.player.domain.PlayerInteractorListener
 import com.practicum.playlistmaker.player.domain.PlayerState
-import com.practicum.playlistmaker.player.domain.api.MediaPlayerRepository
-import com.practicum.playlistmaker.player.domain.api.PlayerInteractorListener
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepository {
 
     var playerState = PlayerState.STATE_DEFAULT
-   private var listener: PlayerInteractorListener? = null
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
+    private var listener: PlayerInteractorListener? = null
 
     override fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
@@ -42,7 +39,7 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
         mediaPlayer.release()
     }
 
-    override fun resetPlayer(){
+    override fun resetPlayer() {
         mediaPlayer.reset()
     }
 
@@ -62,23 +59,19 @@ class MediaPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : MediaPlayerRepos
         }
     }
 
+
     override fun setListener(listener: PlayerInteractorListener) {
         this.listener = listener
     }
 
-    override fun updateProgress(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                if (playerState == PlayerState.STATE_PLAYING) {
-                    val progressText = SimpleDateFormat(
-                        "mm:ss",
-                        Locale.getDefault()
-                    ).format(mediaPlayer.currentPosition)
-                   listener?.onProgressUpdated(progressText)
-                }
-                mainThreadHandler.postDelayed(this, 300L)
-            }
-        }
+    override fun provideState(): PlayerState {
+        return playerState
     }
 
+    override fun provideProgress(): String {
+        return SimpleDateFormat(
+            "mm:ss",
+            Locale.getDefault()
+        ).format(mediaPlayer.currentPosition)
+    }
 }

@@ -1,8 +1,6 @@
 package com.practicum.playlistmaker.player.domain
 
 import com.practicum.playlistmaker.player.domain.api.MediaPlayerInteractor
-import com.practicum.playlistmaker.player.domain.api.MediaPlayerRepository
-import com.practicum.playlistmaker.player.domain.api.PlayerInteractorListener
 
 class MediaPlayerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRepository) :
     MediaPlayerInteractor {
@@ -35,9 +33,12 @@ class MediaPlayerInteractorImpl(private val mediaPlayerRepository: MediaPlayerRe
         mediaPlayerRepository.setListener(listener)
     }
 
-    override fun updateProgress(): Runnable {
-        return mediaPlayerRepository.updateProgress()
+    override fun provideState(): PlayerState {
+       return mediaPlayerRepository.provideState()
+    }
 
+    override fun provideProgress():String {
+        return mediaPlayerRepository.provideProgress()
     }
 
 }

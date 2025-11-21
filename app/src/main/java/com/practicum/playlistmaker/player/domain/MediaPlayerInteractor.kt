@@ -1,5 +1,8 @@
 package com.practicum.playlistmaker.player.domain.api
 
+import com.practicum.playlistmaker.player.domain.PlayerInteractorListener
+import com.practicum.playlistmaker.player.domain.PlayerState
+
 interface MediaPlayerInteractor {
 
     fun preparePlayer(url: String)
@@ -15,6 +18,8 @@ interface MediaPlayerInteractor {
 
     fun setListener(listener: PlayerInteractorListener)
 
-    fun updateProgress(): Runnable
+    fun provideState(): PlayerState
+
+    fun provideProgress():String
 
 }

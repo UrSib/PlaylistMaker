@@ -2,8 +2,6 @@ package com.practicum.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -12,9 +10,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.Track
+import com.practicum.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -29,13 +29,13 @@ class SearchFragment : Fragment() {
     private lateinit var historyAdapter: TrackAdapter
     var searchText = ""
 
-    private val handler = Handler(Looper.getMainLooper())
-
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
     private var isClickAllowed = true
+
+    private lateinit var trackClickDebounce:(Boolean)-> Unit
     private var simpleTextWatcher: TextWatcher? = null
 
     override fun onCreateView(
@@ -49,6 +49,10 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+         trackClickDebounce = debounce<Boolean>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
+            isClickAllowed = true
+        }
 
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
@@ -87,6 +91,7 @@ class SearchFragment : Fragment() {
             binding.historyLayout.isVisible =
                 hasFocus && binding.editTextSearch.text.isEmpty() && history.isNotEmpty()
 
+
         }
 
         binding.editTextSearch.setText(searchText)
@@ -117,7 +122,8 @@ class SearchFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
+                if (s.isNullOrEmpty()) { tracks.clear()
+                    adapter.notifyDataSetChanged() }
                 binding.clear.isVisible = clearVisibility(s)
 
                 binding.historyLayout.isVisible =
@@ -167,13 +173,7 @@ class SearchFragment : Fragment() {
 
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed(
-                { isClickAllowed = true },
-                CLICK_DEBOUNCE_DELAY
-            )
-        }
+        trackClickDebounce(current)
         return current
     }
 
@@ -196,7 +196,11 @@ class SearchFragment : Fragment() {
         binding.icCommunicationsProblem.isVisible = false
         binding.icNothingWasFound.isVisible = false
         binding.refreshButton.isVisible = false
+        binding.infoText.isVisible = false
         binding.progressBar.isVisible = true
+
+        tracks.clear()
+        adapter.notifyDataSetChanged()
     }
 
     private fun showContent(tracksList: List<Track>) {
@@ -205,7 +209,6 @@ class SearchFragment : Fragment() {
         binding.icNothingWasFound.isVisible = false
         binding.refreshButton.isVisible = false
         binding.progressBar.isVisible = false
-
         tracks.clear()
         tracks.addAll(tracksList)
         adapter.notifyDataSetChanged()
@@ -213,6 +216,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showHistory(tracksList: List<Track>) {
+
         history.clear()
         history.addAll(tracksList)
         historyAdapter.notifyDataSetChanged()

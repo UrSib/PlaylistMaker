@@ -5,7 +5,7 @@ import android.media.MediaPlayer
 import com.google.gson.Gson
 import com.practicum.playlistmaker.SHARED_PREFERENCES
 import com.practicum.playlistmaker.player.data.MediaPlayerRepositoryImpl
-import com.practicum.playlistmaker.player.domain.api.MediaPlayerRepository
+import com.practicum.playlistmaker.player.domain.MediaPlayerRepository
 import com.practicum.playlistmaker.search.data.HistoryRepositoryImpl
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.TracksRepositoryImpl
