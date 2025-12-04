@@ -2,12 +2,11 @@
 agp = "8.13.1"
 glide = "4.16.0"
 koinAndroid = "3.3.0"
-mockitoCore = "5.18.0"
 retrofit = "2.9.0"
 
 convertergson= "2.9.0"
 gson = "2.10"
-kotlin = "1.9.24"
+kotlin = "2.0.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -20,6 +19,7 @@ contentpager = "1.0.0"
 fragment = "1.8.0-alpha02"
 navigationFragment= "2.5.3"
 navigationUi = "2.5.3"
+room = "2.8.3"
 
 [libraries]
 
@@ -45,8 +45,11 @@ androidx-contentpager = { group = "androidx.contentpager", name = "contentpager"
 androidx-fragment-compose = { group = "androidx.fragment", name = "fragment-compose", version.ref = "fragment" }
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
+room-ktx = { group = "androidx.room", name = "room-ktx", version = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt"}

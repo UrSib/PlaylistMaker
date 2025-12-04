@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.TRACK_JSON_KEY
+import com.practicum.playlistmaker.library.ui.FavoriteFragment
+import com.practicum.playlistmaker.library.ui.LibraryFragment
 import com.practicum.playlistmaker.player.ui.PlayerFragment
 import com.practicum.playlistmaker.search.domain.Track
 
@@ -39,8 +41,16 @@ class TrackAdapter(
                 nextFragment.arguments = bundle
 
                 val navController = NavHostFragment.findNavController(fragment)
-                navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
+                when(fragment) {
+                    is SearchFragment -> {
 
+                        navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
+                    }
+                    is FavoriteFragment ->{
+
+                        navController.navigate(R.id.action_libraryFragment_to_playerFragment, bundle)
+                    }
+                }
 
             }
         }
