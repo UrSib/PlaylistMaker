@@ -15,9 +15,9 @@ val viewModelModule = module{
 
     viewModel{ SearchViewModel(androidContext(), get(),get()) }
 
-    viewModel{(url:String) -> PlayerViewModel(url, get()) }
+    viewModel{(url:String) -> PlayerViewModel(url, get(), get()) }
 
-    viewModel{(message: String) -> FavoriteViewModel(message) }
+    viewModel{(message: String) -> FavoriteViewModel(message, get()) }
 
     viewModel{(message: String) -> PlaylistsViewModel(message) }
 }

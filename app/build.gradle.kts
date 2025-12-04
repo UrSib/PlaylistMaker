@@ -3,6 +3,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -62,4 +63,8 @@ dependencies {
     implementation(libs.androidx.fragment.compose)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
+
+    implementation (libs.room.runtime)
+    kapt (libs.room.compiler)
+    implementation (libs.room.ktx)
 }

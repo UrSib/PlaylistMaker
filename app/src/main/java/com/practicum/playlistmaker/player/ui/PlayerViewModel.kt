@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.library.domain.db.FavoriteInteractor
 import com.practicum.playlistmaker.player.domain.PlayerInteractorListener
 import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.player.domain.api.MediaPlayerInteractor
+import com.practicum.playlistmaker.search.domain.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -14,7 +16,8 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val url: String,
-    private val mediaPlayerInteractor: MediaPlayerInteractor
+    private val mediaPlayerInteractor: MediaPlayerInteractor,
+    private val favoriteInteractor: FavoriteInteractor
 ) : ViewModel(), PlayerInteractorListener {
 
     private var text: String = "00:00"
@@ -72,5 +75,18 @@ class PlayerViewModel(
 
     fun onDestroy() {
         onCleared()
+    }
+
+    fun onFavoriteClick(track: Track) {
+        viewModelScope.launch {
+            if (track.isFavorite == false) {
+                track.isFavorite = true
+                favoriteInteractor.addTrack(track)
+            } else {
+                track.isFavorite = false
+                favoriteInteractor.deleteTrack(track)
+            }
+            playerStateLiveData.postValue(mediaPlayerInteractor.provideState())
+        }
     }
 }

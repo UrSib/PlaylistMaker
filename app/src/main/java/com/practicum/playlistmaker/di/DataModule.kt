@@ -2,8 +2,13 @@ package com.practicum.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.room.Room
 import com.google.gson.Gson
 import com.practicum.playlistmaker.SHARED_PREFERENCES
+import com.practicum.playlistmaker.library.data.FavoriteRepositoryImpl
+import com.practicum.playlistmaker.library.data.converter.TrackDbConvertor
+import com.practicum.playlistmaker.library.data.db.AppDatabase
+import com.practicum.playlistmaker.library.domain.db.FavoriteRepository
 import com.practicum.playlistmaker.player.data.MediaPlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.MediaPlayerRepository
 import com.practicum.playlistmaker.search.data.HistoryRepositoryImpl
@@ -32,11 +37,11 @@ val dataModule = module {
 
     single { androidContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE) }
 
-    single<HistoryRepository> { HistoryRepositoryImpl(get()) }
+    single<HistoryRepository> { HistoryRepositoryImpl(get(), get()) }
 
     single<NetworkClient> { RetrofitNetworkClient(get(),androidContext()) }
 
-    single<TracksRepository> { TracksRepositoryImpl(get()) }
+    single<TracksRepository> { TracksRepositoryImpl(get(), get()) }
 
     single<MediaPlayerRepository> { MediaPlayerRepositoryImpl(get()) }
 
@@ -49,5 +54,16 @@ val dataModule = module {
             .build()
             .create(ItunesApi::class.java)
     }
+
+    single {
+
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+        factory { TrackDbConvertor() }
+
+    single<FavoriteRepository>{ FavoriteRepositoryImpl(get(), get()) }
 
 }

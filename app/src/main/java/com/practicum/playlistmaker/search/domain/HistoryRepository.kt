@@ -1,7 +1,5 @@
 package com.practicum.playlistmaker.search.domain
 
-import com.practicum.playlistmaker.search.domain.Track
-
 interface HistoryRepository {
 
     fun showHistory(): Array<Track>

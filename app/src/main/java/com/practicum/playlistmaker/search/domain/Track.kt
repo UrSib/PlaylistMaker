@@ -10,8 +10,14 @@ class Track(
     val releaseDate: String?,
     val primaryGenreName: String?,
     val country: String?,
-    val previewUrl: String
+    val previewUrl: String,
+    var isFavorite: Boolean = false,
+    var timestamp: Long
 ) {
 
     fun getCoverArtWork() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+
+   fun updateTimestamp(timestamp: Long) {
+        this.timestamp = timestamp
+    }
 }

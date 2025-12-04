@@ -17,6 +17,7 @@ import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.player.domain.PlayerState
 import com.practicum.playlistmaker.search.domain.Track
+import com.practicum.playlistmaker.settings.domain.ThemeInteractor
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -25,8 +26,10 @@ import java.util.Locale
 class PlayerFragment : Fragment() {
 
     private val gson: Gson by inject()
+
+    private val themeInteractor: ThemeInteractor by inject()
     private var url: String = ""
-    private val viewModel: PlayerViewModel by viewModel { parametersOf(url) }
+    private val viewModel: PlayerViewModel by viewModel { parametersOf( url) }
     private lateinit var binding: FragmentPlayerBinding
 
     override fun onCreateView(
@@ -48,6 +51,8 @@ class PlayerFragment : Fragment() {
 
         val trackJson = arguments?.getString(TRACK_JSON_KEY)
       val track = gson.fromJson(trackJson, Track::class.java)
+
+        colorLikeButton(track)
 
 
         val px = requireContext().dpToPx(8F)
@@ -123,6 +128,12 @@ class PlayerFragment : Fragment() {
             viewModel.onPauseClick()
 
         }
+
+        binding.likeButton.setOnClickListener{
+
+            viewModel.onFavoriteClick(track)
+            colorLikeButton(track)
+        }
     }
 
     override fun onPause() {
@@ -133,6 +144,23 @@ class PlayerFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
+    }
+
+    private fun colorLikeButton(track: Track) {
+        val isDarkTheme = themeInteractor.checkTheme()
+            if (track.isFavorite) {
+                if (isDarkTheme) {
+                    binding.likeButton.setImageResource(R.drawable.ic_like_active_dark_51)
+                } else {
+                    binding.likeButton.setImageResource(R.drawable.ic_like_active_51)
+                }
+            } else {
+                if (isDarkTheme) {
+                    binding.likeButton.setImageResource(R.drawable.ic_like_dark_51)
+                } else {
+                    binding.likeButton.setImageResource(R.drawable.ic_like_51)
+                }
+            }
     }
 
 }
