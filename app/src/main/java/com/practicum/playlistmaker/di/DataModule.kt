@@ -6,9 +6,13 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.practicum.playlistmaker.SHARED_PREFERENCES
 import com.practicum.playlistmaker.library.data.FavoriteRepositoryImpl
+import com.practicum.playlistmaker.library.data.PlaylistsRepositoryImpl
+import com.practicum.playlistmaker.library.data.converter.PlaylistDbConvertor
+import com.practicum.playlistmaker.library.data.converter.PlaylistTrackDbConvertor
 import com.practicum.playlistmaker.library.data.converter.TrackDbConvertor
 import com.practicum.playlistmaker.library.data.db.AppDatabase
 import com.practicum.playlistmaker.library.domain.db.FavoriteRepository
+import com.practicum.playlistmaker.library.domain.db.PlaylistsRepository
 import com.practicum.playlistmaker.player.data.MediaPlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.MediaPlayerRepository
 import com.practicum.playlistmaker.search.data.HistoryRepositoryImpl
@@ -31,7 +35,7 @@ val dataModule = module {
 
     single<ExternalNavigator> { ExternalNavigatorImpl(androidContext()) }
 
-    factory{ Gson() }
+    factory { Gson() }
 
     single<ThemeRepository> { ThemeRepositoryImpl(get()) }
 
@@ -39,7 +43,7 @@ val dataModule = module {
 
     single<HistoryRepository> { HistoryRepositoryImpl(get(), get()) }
 
-    single<NetworkClient> { RetrofitNetworkClient(get(),androidContext()) }
+    single<NetworkClient> { RetrofitNetworkClient(get(), androidContext()) }
 
     single<TracksRepository> { TracksRepositoryImpl(get(), get()) }
 
@@ -62,8 +66,11 @@ val dataModule = module {
             .build()
     }
 
-        factory { TrackDbConvertor() }
+    factory { TrackDbConvertor() }
+    factory { PlaylistDbConvertor() }
+    factory { PlaylistTrackDbConvertor() }
 
-    single<FavoriteRepository>{ FavoriteRepositoryImpl(get(), get()) }
+    single<FavoriteRepository> { FavoriteRepositoryImpl(get(), get()) }
+    single<PlaylistsRepository> { PlaylistsRepositoryImpl(get(), get(), get()) }
 
 }

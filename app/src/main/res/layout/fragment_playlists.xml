@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/clear_history_button"
+        android:id="@+id/new_playlist_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -21,6 +21,12 @@
         android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/low_text_size"
         app:cornerRadius="54dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="55dp"/>
 
     <ImageView
         android:id="@+id/ic_nothing_was_found"

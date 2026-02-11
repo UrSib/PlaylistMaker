@@ -9,7 +9,7 @@ class FavoriteInteractorImpl(private val favoriteRepository: FavoriteRepository)
     FavoriteInteractor {
 
     override suspend fun addTrack(track: Track){
-        favoriteRepository.addTrack(track)
+       favoriteRepository.addTrack(track)
     }
 
     override suspend fun deleteTrack(track: Track){
