@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.PlaylistListViewBinding
@@ -46,7 +47,7 @@ class PlayerViewHolder(
             .load(file)
             .placeholder(R.drawable.placeholder)
             .centerCrop()
-            .transform(RoundedCorners(px))
+            .transform(CenterCrop(),RoundedCorners(px))
             .into(binding.playlistCover)
 
     }

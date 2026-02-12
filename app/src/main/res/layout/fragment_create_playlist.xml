@@ -26,13 +26,13 @@
             android:layout_marginTop="26dp"
             android:layout_marginEnd="24dp"
             android:background="@drawable/dashed_rectangle"
-            android:scaleType = "centerCrop"
+            android:clickable="true"
+            android:scaleType="center"
             android:src="@drawable/ic_add_photo_100"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:clickable="true"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/playlist_name"

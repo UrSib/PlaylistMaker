@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.PlaylistViewBinding
@@ -26,13 +27,6 @@ class PlaylistViewHolder(private val binding: PlaylistViewBinding): RecyclerView
 
         val px = itemView.context.dpToPx(8F)
 
-        /*Glide.with(itemView)
-            .load("/storage/emulated/0/Android/data/com.practicum.playlistmaker/files/Pictures/first_cover.jpg")//playList.playListCoverPath)
-            .placeholder(R.drawable.placeholder)
-            .centerCrop()
-            .transform(RoundedCorners(px))
-            .into(binding.cover)*/
-
             val filePath = playList.playListCoverPath
         val fileName = "cover_${playList.playListId}.jpg"
             val file = File(filePath, fileName)
@@ -41,13 +35,10 @@ class PlaylistViewHolder(private val binding: PlaylistViewBinding): RecyclerView
             .load(file)
             .placeholder(R.drawable.placeholder)
             .centerCrop()
-            .transform(RoundedCorners(px))
+            .transform(CenterCrop(),RoundedCorners(px))
             .into(binding.cover)
-            //binding.cover.setImageURI(file.toUri())
-
 
         binding.name.text = playList.playListName
-        //binding.size.text = playList.playListSize.toString()+" треков"
         binding.size.text = "${playList.playListSize} ${getTracksDeclension(playList.playListSize)}"
 
     }

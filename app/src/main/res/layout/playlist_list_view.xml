@@ -40,10 +40,14 @@
 
             <TextView
                 app:layout_constraintStart_toEndOf="@+id/playlist_cover"
-                app:layout_constraintBottom_toBottomOf="@+id/playlist_cover"
+                app:layout_constraintTop_toBottomOf="@+id/playlist_name"
                 android:id="@+id/size"
-                style="@style/trackViewStyle"
-                android:layout_marginBottom="@dimen/short_padding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:textColor="?attr/colorOnPrimary"
+                android:fontFamily="@font/ys_display_regular"
+                android:textSize="@dimen/low_low_text_size"
                 android:layout_marginStart="@dimen/short_padding"
                 android:ellipsize="end"
                 android:maxLines="1"
