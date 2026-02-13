@@ -1,4 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
+
     <!-- Base application theme. -->
     <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
@@ -73,6 +74,15 @@
         <item name="android:layout_marginEnd">@dimen/long_padding</item>
         <item name="android:background">@drawable/round_button</item>
         <item name="android:src">@drawable/ic_like_dark_51</item>
+    </style>
+
+    <style name="textFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
+    </style>
+
+    <style name="editTextStyle" parent="@android:style/Widget.Material.EditText">
+        <item name="android:strokeColor">@color/white</item>
     </style>
 
 </resources>

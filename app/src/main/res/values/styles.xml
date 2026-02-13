@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+
+<resources xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
@@ -152,5 +153,23 @@
     <style name="BottomNavigationViewStyle" parent="Widget.Design.BottomNavigationView">
         <item name="itemIconTint">@drawable/bottom_nav_item_color</item>
         <item name="itemTextColor">@drawable/bottom_nav_item_text_color</item>
+    </style>
+
+    <style name="textFieldStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense" >
+        <item name="boxStrokeColor">@color/blue</item>
+        <item name="android:textColorHint">@color/black</item>
+    </style>
+
+    <style name="editTextStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/blue</item>
+    </style>
+
+    <style name="AlertDialogButtonStyle" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/DialogButtonStyle</item>
+        <item name="buttonBarNeutralButtonStyle">@style/DialogButtonStyle</item>
+    </style>
+
+    <style name="DialogButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 </resources>

@@ -4,14 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.practicum.playlistmaker.library.domain.Playlist
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class PlaylistsFragment: Fragment(){
+class PlaylistsFragment : Fragment() {
 
-    companion object{
+    companion object {
 
         private const val PLAYLISTS_MESSAGE = "playlists_message"
 
@@ -22,7 +26,10 @@ class PlaylistsFragment: Fragment(){
         }
     }
 
-    private val PlaylistsViewModel: PlaylistsViewModel by viewModel {
+    private var playlists = mutableListOf<Playlist>()
+    private lateinit var adapter: PlaylistAdapter
+
+    private val playlistsViewModel: PlaylistsViewModel by viewModel {
         parametersOf(requireArguments().getString(PLAYLISTS_MESSAGE))
     }
 
@@ -40,9 +47,49 @@ class PlaylistsFragment: Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        PlaylistsViewModel.observeMessage().observe(viewLifecycleOwner) {
-            binding.infoText.text=it
+        playlistsViewModel.observeMessage().observe(viewLifecycleOwner) {
+            binding.infoText.text = it
         }
+
+        playlistsViewModel.observeState().observe(viewLifecycleOwner){
+            render(it)
+        }
+
+        adapter = PlaylistAdapter(playlists)
+
+        binding.newPlaylistButton.setOnClickListener {
+            val navController = NavHostFragment.findNavController(requireParentFragment())
+            navController.navigate(com.practicum.playlistmaker.R.id.action_libraryFragment_to_playlistCreateFragment)
+        }
+
+        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recyclerView.adapter = adapter
+
+    }
+
+    fun render(state: PlaylistsState) {
+        when (state) {
+
+            is PlaylistsState.Content -> showContent(state.playlists)
+            is PlaylistsState.Empty -> showEmpty()
+
+        }
+    }
+
+    private fun showContent(playlistsList: List<Playlist>) {
+        binding.icNothingWasFound.isVisible = false
+        binding.infoText.isVisible = false
+        playlists.clear()
+        playlists.addAll(playlistsList)
+        adapter.notifyDataSetChanged()
+
+    }
+
+    private fun showEmpty(){
+        binding.icNothingWasFound.isVisible = true
+        binding.infoText.isVisible = true
+        playlists.clear()
+        adapter.notifyDataSetChanged()
     }
 
 }

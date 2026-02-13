@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.library.ui
 
 import com.practicum.playlistmaker.search.domain.Track
-import com.practicum.playlistmaker.search.ui.MessageType
 
 sealed interface FavoriteState {
 
