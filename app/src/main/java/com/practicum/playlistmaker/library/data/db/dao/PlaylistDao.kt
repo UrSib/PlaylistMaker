@@ -18,4 +18,13 @@ interface PlaylistDao {
 
     @Query("UPDATE play_list_table SET playListTracksIds = :playListTracksIds, playListSize = :playListSize WHERE playListId = :playlistId")
     suspend fun updatePlaylist(playlistId: Long, playListTracksIds: String, playListSize: Int)
+
+    @Query("SELECT * FROM play_list_table WHERE playListId = :playlistId")
+    suspend fun getPlaylistById(playlistId: Long): PlaylistEntity
+
+    @Query("DELETE FROM play_list_table WHERE playListId = :playlistId")
+    suspend fun deletePlaylist(playlistId: Long)
+
+    @Query("UPDATE play_list_table SET playListName = :playListName, playListDescription = :playListDescription, playlistCoverPath = :playlistCoverPath WHERE playListId = :playlistId")
+    suspend fun updatePlaylist(playlistId: Long, playListName: String, playListDescription: String?, playlistCoverPath:String?)
 }

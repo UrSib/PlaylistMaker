@@ -2,15 +2,20 @@ package com.practicum.playlistmaker.search.ui
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.TRACK_JSON_KEY
 import com.practicum.playlistmaker.library.ui.FavoriteFragment
 import com.practicum.playlistmaker.library.ui.LibraryFragment
+import com.practicum.playlistmaker.library.ui.PlaylistFragment
 import com.practicum.playlistmaker.player.ui.PlayerFragment
 import com.practicum.playlistmaker.search.domain.Track
 
@@ -20,8 +25,6 @@ class TrackAdapter(
     private val onTrackClick: (Track) -> Unit,
     private val clickDebounce:()-> Boolean
 ) : RecyclerView.Adapter<TrackViewHolder>() {
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder =
         TrackViewHolder.from(parent)
@@ -50,8 +53,25 @@ class TrackAdapter(
 
                         navController.navigate(R.id.action_libraryFragment_to_playerFragment, bundle)
                     }
+                    is PlaylistFragment ->{
+
+                        navController.navigate(R.id.action_playlistFragment_to_playerFragment, bundle)
+                    }
                 }
 
+            }
+        }
+        holder.itemView.setOnLongClickListener {
+            if (fragment is PlaylistFragment) {
+                MaterialAlertDialogBuilder(fragment.requireContext(),R.style.AlertDialogButtonStyle)
+                    .setTitle("Хотите удалить трек?")
+                    .setNegativeButton("Нет"){dialog,which ->}
+                    .setPositiveButton("Да"){dialog, which ->val trackId = tracks[position].trackId
+                        fragment.getTrackId(trackId)}
+                    .show()
+                true
+            } else {
+                false
             }
         }
     }
@@ -59,5 +79,4 @@ class TrackAdapter(
     override fun getItemCount(): Int {
         return tracks.size
     }
-
 }

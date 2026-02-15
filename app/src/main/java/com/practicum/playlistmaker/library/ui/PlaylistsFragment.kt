@@ -55,7 +55,7 @@ class PlaylistsFragment : Fragment() {
             render(it)
         }
 
-        adapter = PlaylistAdapter(playlists)
+        adapter = PlaylistAdapter(this, playlists)
 
         binding.newPlaylistButton.setOnClickListener {
             val navController = NavHostFragment.findNavController(requireParentFragment())
