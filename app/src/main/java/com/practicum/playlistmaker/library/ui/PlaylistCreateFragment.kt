@@ -11,13 +11,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -25,7 +23,6 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.practicum.playlistmaker.R
@@ -38,13 +35,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class PlaylistCreateFragment : Fragment() {
+open class PlaylistCreateFragment : Fragment() {
 
     private val gson: Gson by inject()
     var uriForStorage: Uri? = null
 
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
-    private lateinit var binding: FragmentCreatePlaylistBinding
+
+    lateinit var binding: FragmentCreatePlaylistBinding
     private var simpleTextWatcher: TextWatcher? = null
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
@@ -54,7 +52,7 @@ class PlaylistCreateFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         binding = FragmentCreatePlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -68,6 +66,7 @@ class PlaylistCreateFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
 
                 uriForStorage = uri
+                Log.d("Cov", "uriForStorage = $uri")
 
                 val px = requireContext().dpToPx(8F)
                 Glide.with(this)
@@ -156,7 +155,7 @@ class PlaylistCreateFragment : Fragment() {
         }
     }
 
-    private fun saveImageToPrivateStorage(uri: Uri, playlistId: Long) {
+    fun saveImageToPrivateStorage(uri: Uri, playlistId: Long) {
 
         val filePath =
             File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
@@ -178,7 +177,7 @@ class PlaylistCreateFragment : Fragment() {
 
     }
 
-    private fun closeFragment() {
+     open fun closeFragment() {
 
         if (binding.playlistName.editText?.text?.isNotEmpty() == true || binding.description.editText?.text?.isNotEmpty() == true) {
             confirmDialog.show()
