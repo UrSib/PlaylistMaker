@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlin.collections.sortedByDescending
 
 class PlaylistsRepositoryImpl(
     private val appDatabase: AppDatabase,
@@ -44,6 +45,7 @@ class PlaylistsRepositoryImpl(
         playlist.playListSize += 1
         appDatabase.playlistDao()
             .updatePlaylist(playlist.playListId, playlist.playListTracksIds, playlist.playListSize)
+        track.updateTimestamp(System.currentTimeMillis())
         appDatabase.playlistTrackDao().insertPlaylistTrack(convertFromPlaylistTrack(track))
     }
 

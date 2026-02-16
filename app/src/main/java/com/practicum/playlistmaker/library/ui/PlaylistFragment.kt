@@ -27,6 +27,7 @@ import org.koin.core.parameter.parametersOf
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.collections.sortedByDescending
 
 class PlaylistFragment : Fragment() {
 
@@ -38,7 +39,7 @@ class PlaylistFragment : Fragment() {
     private var isClickAllowed = true
     private lateinit var trackClickDebounce: (Boolean) -> Unit
     private var playlistId: Long? = 0L
-    private var tracks = mutableListOf<Track>()
+    private var tracks: List<Track> = mutableListOf<Track>()
     private lateinit var adapter: TrackAdapter
 
     private val viewModel: PlaylistViewModel by viewModel { parametersOf(playlistId) }
@@ -229,6 +230,8 @@ class PlaylistFragment : Fragment() {
     fun getTrackId(trackId: Long) {
 
         viewModel.deleteTrack(trackId)
+        adapter.notifyDataSetChanged()
+
     }
 
     override fun onResume() {

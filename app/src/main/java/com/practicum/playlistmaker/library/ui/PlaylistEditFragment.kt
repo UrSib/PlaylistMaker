@@ -3,6 +3,7 @@ package com.practicum.playlistmaker.library.ui
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,13 +53,17 @@ class PlaylistEditFragment() : PlaylistCreateFragment() {
 
         binding.createButton.setOnClickListener {
             if (uriForStorage != null) {
-                saveImageToPrivateStorage(uriForStorage!!, playlist.playListId)}
+                saveImageToPrivateStorage(uriForStorage!!, playlist.playListId)
+                playlist.playListCoverPath = (File(
+                    requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    "myalbum"
+                )).absolutePath
+            }else{
+                playlist.playListCoverPath = null
+            }
+
             playlist.playListName= binding.playlistName.editText!!.text.toString()
             playlist.playListDescription = binding.description.editText?.text.toString()
-            playlist.playListCoverPath = (File(
-                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                "myalbum"
-            )).absolutePath
 
             lifecycleScope.launch { viewModel.onButtonClick(playlist) }
             findNavController().navigateUp()

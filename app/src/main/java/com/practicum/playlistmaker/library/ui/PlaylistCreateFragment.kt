@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,6 +66,7 @@ open class PlaylistCreateFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
 
                 uriForStorage = uri
+                Log.d("Cov", "uriForStorage = $uri")
 
                 val px = requireContext().dpToPx(8F)
                 Glide.with(this)
